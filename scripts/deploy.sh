@@ -31,6 +31,8 @@ rsync -avz --delete \
 echo "[4/5] Syncing infra configs..."
 rsync -avz "$REPO_ROOT/infra/docker-compose.yml" "$SERVER:$SERVER_APP/" 2>&1 | tail -1
 rsync -avz "$REPO_ROOT/infra/nginx/default.conf" "$SERVER:$SERVER_APP/nginx/" 2>&1 | tail -1
+# Ensure .env exists at $SERVER_APP/ level (docker-compose expects it there)
+ssh "$SERVER" "test -f $SERVER_APP/.env || cp $SERVER_APP/infra/.env $SERVER_APP/.env 2>/dev/null || echo 'WARNING: .env not found'"
 
 echo "[5/5] Installing deps & rebuilding Docker..."
 ssh "$SERVER" "cd $SERVER_APP/server && npm ci --omit=dev --silent 2>&1 | tail -1"
