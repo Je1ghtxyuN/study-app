@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model StudyUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  password     String?
+  nickname     String?
+  avatarUrl    String?
+  githubId     String?  @unique
+  preferences  Json?
+  createdAt    DateTime @default(now())
+}
+
+model StudySession {
+  id           String   @id @default(cuid())
+  userId       String?
+  workDuration Int
+  completedAt  DateTime @default(now())
+
+  @@index([completedAt])
+  @@index([userId])
+}
+
+model TodoItem {
+  id        String   @id @default(cuid())
+  userId    String
+  label     String
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
