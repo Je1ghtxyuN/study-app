@@ -1,0 +1,338 @@
+{
+  "meta": {
+    "localeLabel": "简体中文"
+  },
+  "brand": {
+    "name": "Je1ghtxyuN",
+    "portalTagline": "写作、项目和专注空间，一站搞定。",
+    "studyRoomName": "Study Room",
+    "studyRoomShortDescription": "专注空间，带计时器、场景氛围和任务记录。",
+    "contactEmailLabel": "邮箱",
+    "contactLocationLabel": "位置"
+  },
+  "common": {
+    "language": "语言",
+    "local": "本地",
+    "future": "未来",
+    "close": "关闭",
+    "start": "开始",
+    "pause": "暂停",
+    "reset": "重置",
+    "exit": "退出",
+    "save": "保存",
+    "enabled": "已开启",
+    "muted": "静音",
+    "play": "播放",
+    "previous": "上一首",
+    "next": "下一首",
+    "track": "曲目",
+    "volume": "音量",
+    "add": "添加",
+    "done": "完成",
+    "undo": "撤销",
+    "comingSoon": "即将推出",
+    "resumeFocus": "继续专注",
+    "loading": "加载中...",
+    "login": "登录",
+    "logout": "退出登录",
+    "register": "注册",
+    "cancel": "取消",
+    "password": "密码",
+    "email": "邮箱",
+    "guest": "访客"
+  },
+  "portal": {
+    "languageSelectorLabel": "语言",
+    "nav": {
+      "home": "主页",
+      "archives": "归档",
+      "categories": "分类",
+      "portfolio": "作品集",
+      "studyRoom": "Study Room",
+      "contact": "联系",
+      "about": "关于"
+    },
+    "shortcuts": {
+      "blog": {
+        "label": "博客",
+        "description": "读文章和项目笔记。"
+      },
+      "portfolio": {
+        "label": "作品集",
+        "description": "我做过的东西。"
+      },
+      "studyRoom": {
+        "label": "Study Room",
+        "description": "打开专注空间。"
+      },
+      "contact": {
+        "label": "联系",
+        "description": "联系我。"
+      }
+    },
+    "home": {
+      "shortcutsTitle": "探索",
+      "shortcutsDescription": "",
+      "recentPostsTitle": "最近写作",
+      "recentPostsIntro": "",
+      "portfolioPreviewTitle": "精选项目",
+      "footerTitle": "保持联系",
+      "footerIntro": ""
+    },
+    "footer": {
+      "socialLinks": "社交链接",
+      "contact": "联系信息"
+    },
+    "about": {
+      "title": "关于我",
+      "skillsTitle": "技能",
+      "skillsIntro": "",
+      "experienceTitle": "经历",
+      "experienceIntro": "",
+      "emptySkills": "暂未配置技能项。",
+      "emptyExperience": "暂未配置经历项。"
+    },
+    "portfolio": {
+      "title": "作品集",
+      "empty": "暂未配置项目卡片。"
+    },
+    "studyRoom": {
+      "title": "Study Room",
+      "ctaLabel": "进入 Study Room",
+      "ctaNote": "",
+      "featuresTitle": "整合能力",
+      "featuresIntro": "",
+      "empty": "暂未配置 Study Room 功能项。"
+    },
+    "contact": {
+      "title": "联系",
+      "channelsTitle": "联系渠道",
+      "bestForLabel": "适合交流",
+      "messageChecklistTitle": "来信建议包含",
+      "messageChecklistIntro": "清晰的消息通常会包含：",
+      "checklist": {
+        "who": "你是谁",
+        "topic": "联系的主题是什么",
+        "context": "相关链接或上下文信息",
+        "reply": "希望我如何回复你"
+      },
+      "formTitle": "联系表单",
+      "formLegend": "发送消息",
+      "nameLabel": "姓名",
+      "emailLabel": "邮箱",
+      "topicLabel": "主题",
+      "messageLabel": "内容",
+      "namePlaceholder": "你的名字",
+      "emailPlaceholder": "you@example.com",
+      "topicPlaceholder": "项目、合作，或者只是打个招呼",
+      "messagePlaceholder": "简单介绍一下自己并写下你的消息",
+      "sendButton": "发送消息"
+    },
+    "searchPlaceholder": "搜索..."
+  },
+  "studyRoom": {
+    "chrome": {
+      "brandText": "Study Room",
+      "panelGroupLabel": "Study Room 面板"
+    },
+    "panelOverlay": {
+      "eyebrow": "面板模式",
+      "close": "关闭"
+    },
+    "panels": {
+      "todo": {
+        "title": "任务面板",
+        "description": "浮动在场景上的快捷任务列表。"
+      },
+      "music": {
+        "title": "音乐面板",
+        "description": "背景音乐控制。"
+      },
+      "statistics": {
+        "title": "统计面板",
+        "description": "学习统计一览。"
+      },
+      "settings": {
+        "title": "设置面板",
+        "description": "计时器、场景和显示选项。"
+      }
+    },
+    "timer": {
+      "idleStart": "开始",
+      "resumeFocus": "继续专注",
+      "workChip": "工作",
+      "shortBreakChip": "短休息",
+      "longBreakChip": "长休息",
+      "longBreakNext": "下一次即长休息",
+      "longBreakIn": "还有 {count} 次进入长休息",
+      "automaticReturn": "即将回到工作",
+      "completedPomodoros": "已完成番茄钟 {count}",
+      "longBreakEvery": "每 {count} 次进入长休息",
+      "status": {
+        "work": {
+          "idle": "准备专注",
+          "paused": "专注已暂停",
+          "running": "专注进行中"
+        },
+        "shortBreak": {
+          "idle": "准备短休息",
+          "paused": "休息已暂停",
+          "running": "短休息"
+        },
+        "longBreak": {
+          "idle": "准备长休息",
+          "paused": "长休息已暂停",
+          "running": "长休息"
+        }
+      },
+      "hint": {
+        "work": "当前正在专注会话",
+        "shortBreak": "短休息",
+        "longBreak": "长休息"
+      },
+      "metadataTone": {
+        "work": "专注",
+        "shortBreak": "短休息",
+        "longBreak": "长休息"
+      }
+    },
+    "cues": {
+      "eyebrow": "",
+      "focusComplete": "专注完成",
+      "shortBreak": "短休息",
+      "longBreak": "长休息",
+      "backToFocus": "回到专注",
+      "workSession": "工作会话"
+    },
+    "settings": {
+      "titleEyebrow": "Study Room 偏好",
+      "title": "显示与行为",
+      "intro": "",
+      "languageEyebrow": "语言设置",
+      "languageTitle": "界面语言",
+      "languageIntro": "",
+      "sceneEyebrow": "场景设置",
+      "sceneTitle": "学习环境",
+      "sceneIntro": "",
+      "customUploadsTitle": "自定义上传",
+      "customUploadsCopy": "",
+      "displayEyebrow": "计时器显示设置",
+      "displayTitle": "呈现方式",
+      "displayIntro": "",
+      "displayModes": {
+        "center_focus": {
+          "label": "中心专注",
+          "description": "场景上的大号居中计时器。"
+        },
+        "minimal_overlay": {
+          "label": "极简覆盖",
+          "description": "小浮层，场景为主。"
+        },
+        "corner_embed": {
+          "label": "角落嵌入",
+          "description": "角落迷你计时器。"
+        }
+      },
+      "timerEyebrow": "计时行为设置",
+      "timerTitle": "番茄钟引擎",
+      "timerIntro": "",
+      "workMinutes": "工作时长",
+      "shortBreakMinutes": "短休息时长",
+      "longBreakMinutes": "长休息时长",
+      "longBreakInterval": "每隔几次进入长休息",
+      "completionBellTitle": "完成提示铃",
+      "completionBellCopy": "",
+      "saveTimer": "保存计时设置",
+      "audioEyebrow": "",
+      "audioTitle": "云音乐",
+      "audioCopy": ""
+    },
+    "music": {
+      "eyebrow": "环境音乐",
+      "trackLabel": "曲目",
+      "playback": {
+        "idle": "空闲",
+        "playing": "播放中",
+        "paused": "已暂停"
+      },
+      "source": {
+        "localLabel": "本地曲库",
+        "localDescription": "",
+        "neteaseLabel": "云音乐",
+        "neteaseDescription": ""
+      },
+      "tracks": {
+        "deep-focus-placeholder": {
+          "title": "深度专注",
+          "note": ""
+        },
+        "late-night-placeholder": {
+          "title": "深夜",
+          "note": ""
+        }
+      },
+      "errors": {
+        "blocked": "浏览器尚未接收到用户手势前，播放可能会被阻止。",
+        "enableSound": "请先开启声音，再启动环境播放。"
+      },
+      "noTrack": "未选择曲目",
+      "loginNetEase": "登录网易云",
+      "myPlaylists": "我的歌单",
+      "sendCode": "发送验证码",
+      "resend": "重新发送",
+      "verifyAndLogin": "验证并登录",
+      "emailOrPhonePlaceholder": "邮箱或手机号",
+      "phonePlaceholder": "手机号",
+      "smsCodePlaceholder": "验证码"
+    },
+    "todo": {
+      "eyebrow": "任务记录",
+      "title": "当前待办",
+      "intro": "面向当前学习会话的轻量本地任务列表。",
+      "inputPlaceholder": "添加一个小的学习任务",
+      "empty": "还没有任务。",
+      "loginToSync": "登录后可跨设备同步任务。"
+    },
+    "statistics": {
+      "eyebrow": "统计",
+      "title": "会话计数",
+      "editNickname": "修改昵称",
+      "nicknamePlaceholder": "输入你的显示名称",
+      "nicknameUpdated": "昵称已更新",
+      "intro": "",
+      "completedPomodoros": "已完成番茄钟",
+      "completedBreaks": "已完成休息",
+      "pomodorosToday": "今日番茄钟",
+      "totalCompleted": "累计完成",
+      "focusTime": "专注时间",
+      "last12Weeks": "最近 12 周",
+      "less": "少",
+      "more": "多",
+      "nicknameOptional": "昵称（可选）",
+      "futureCopy": ""
+    },
+    "auth": {
+      "eyebrow": "账号",
+      "title": "登录",
+      "intro": "",
+      "sessionHandoff": "会话交接",
+      "protectedPresets": "受保护预设",
+      "tokenStorage": "后端令牌存储",
+      "futureCopy": ""
+    },
+    "scenes": {
+      "coastalCafe": {
+        "name": "海岸咖啡馆",
+        "description": "更适合白天轻量专注的明亮露天咖啡馆循环场景。"
+      },
+      "retroDesk": {
+        "name": "复古书桌",
+        "description": "带有 CRT 氛围的温暖夜间书桌循环场景。"
+      },
+      "aquariumRoom": {
+        "name": "水族馆房间",
+        "description": "带有水族箱微光、适合深夜深度工作的室内循环场景。"
+      }
+    }
+  }
+}

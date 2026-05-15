@@ -1,0 +1,338 @@
+{
+  "meta": {
+    "localeLabel": "English"
+  },
+  "brand": {
+    "name": "Je1ghtxyuN",
+    "portalTagline": "Writing, projects, and a focus workspace — all in one place.",
+    "studyRoomName": "Study Room",
+    "studyRoomShortDescription": "A focus workspace with timer, ambient scenes, and task capture.",
+    "contactEmailLabel": "Email",
+    "contactLocationLabel": "Location"
+  },
+  "common": {
+    "language": "Language",
+    "local": "Local",
+    "future": "Future",
+    "close": "Close",
+    "start": "Start",
+    "pause": "Pause",
+    "reset": "Reset",
+    "exit": "Exit",
+    "save": "Save",
+    "enabled": "Enabled",
+    "muted": "Muted",
+    "play": "Play",
+    "previous": "Previous",
+    "next": "Next",
+    "track": "Track",
+    "volume": "Volume",
+    "add": "Add",
+    "done": "Done",
+    "undo": "Undo",
+    "comingSoon": "Coming Soon",
+    "resumeFocus": "Resume Focus",
+    "loading": "Loading...",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "cancel": "Cancel",
+    "password": "Password",
+    "email": "Email",
+    "guest": "Guest"
+  },
+  "portal": {
+    "languageSelectorLabel": "Language",
+    "nav": {
+      "home": "Home",
+      "archives": "Archives",
+      "categories": "Categories",
+      "portfolio": "Portfolio",
+      "studyRoom": "Study Room",
+      "contact": "Contact",
+      "about": "About"
+    },
+    "shortcuts": {
+      "blog": {
+        "label": "Blog",
+        "description": ""
+      },
+      "portfolio": {
+        "label": "Portfolio",
+        "description": ""
+      },
+      "studyRoom": {
+        "label": "Study Room",
+        "description": "Open the focus workspace."
+      },
+      "contact": {
+        "label": "Contact",
+        "description": "Get in touch."
+      }
+    },
+    "home": {
+      "shortcutsTitle": "Explore",
+      "shortcutsDescription": "",
+      "recentPostsTitle": "Recent Writing",
+      "recentPostsIntro": "",
+      "portfolioPreviewTitle": "Selected Projects",
+      "footerTitle": "Stay Connected",
+      "footerIntro": ""
+    },
+    "footer": {
+      "socialLinks": "Social Links",
+      "contact": "Contact"
+    },
+    "about": {
+      "title": "About Me",
+      "skillsTitle": "Skills",
+      "skillsIntro": "",
+      "experienceTitle": "Experience",
+      "experienceIntro": "",
+      "emptySkills": "No skills configured yet.",
+      "emptyExperience": "No experience entries configured yet."
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "empty": "No portfolio cards configured yet."
+    },
+    "studyRoom": {
+      "title": "Study Room",
+      "ctaLabel": "Enter Study Room",
+      "ctaNote": "",
+      "featuresTitle": "Integrated Features",
+      "featuresIntro": "",
+      "empty": "No Study Room features configured yet."
+    },
+    "contact": {
+      "title": "Contact",
+      "channelsTitle": "Contact Channels",
+      "bestForLabel": "Best for",
+      "messageChecklistTitle": "What To Include In Your Message",
+      "messageChecklistIntro": "The clearest messages usually include:",
+      "checklist": {
+        "who": "who you are",
+        "topic": "what you are reaching out about",
+        "context": "useful links or context",
+        "reply": "how you would like me to reply"
+      },
+      "formTitle": "Contact Form",
+      "formLegend": "Send a message",
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "topicLabel": "Topic",
+      "messageLabel": "Message",
+      "namePlaceholder": "Your name",
+      "emailPlaceholder": "you@example.com",
+      "topicPlaceholder": "Project, collaboration, or a quick hello",
+      "messagePlaceholder": "A short introduction and your message",
+      "sendButton": "Send Message"
+    },
+    "searchPlaceholder": "Search..."
+  },
+  "studyRoom": {
+    "chrome": {
+      "brandText": "Study Room",
+      "panelGroupLabel": "Study Room Panels"
+    },
+    "panelOverlay": {
+      "eyebrow": "Panel Mode",
+      "close": "Close"
+    },
+    "panels": {
+      "todo": {
+        "title": "Todo Panel",
+        "description": "Quick task list that floats over your scene."
+      },
+      "music": {
+        "title": "Music Panel",
+        "description": "Background music controls."
+      },
+      "statistics": {
+        "title": "Statistics Panel",
+        "description": "Your study stats at a glance."
+      },
+      "settings": {
+        "title": "Settings Panel",
+        "description": "Timer, scenes, and display options."
+      }
+    },
+    "timer": {
+      "idleStart": "Start",
+      "resumeFocus": "Resume Focus",
+      "workChip": "Work",
+      "shortBreakChip": "Short Break",
+      "longBreakChip": "Long Break",
+      "longBreakNext": "Long Break Next",
+      "longBreakIn": "Long Break In {count}",
+      "automaticReturn": "Back to work soon",
+      "completedPomodoros": "Completed Pomodoros {count}",
+      "longBreakEvery": "Long break every {count}",
+      "status": {
+        "work": {
+          "idle": "Focus Ready",
+          "paused": "Focus Held",
+          "running": "Focused Flow"
+        },
+        "shortBreak": {
+          "idle": "Short Break Ready",
+          "paused": "Break Held",
+          "running": "Short Break"
+        },
+        "longBreak": {
+          "idle": "Long Break Ready",
+          "paused": "Long Break Paused",
+          "running": "Long Break"
+        }
+      },
+      "hint": {
+        "work": "Focus Session Running",
+        "shortBreak": "Short Break",
+        "longBreak": "Long Break"
+      },
+      "metadataTone": {
+        "work": "Focus",
+        "shortBreak": "Short Break",
+        "longBreak": "Long Break"
+      }
+    },
+    "cues": {
+      "eyebrow": "",
+      "focusComplete": "Focus Complete",
+      "shortBreak": "Short Break",
+      "longBreak": "Long Break",
+      "backToFocus": "Back To Focus",
+      "workSession": "Work Session"
+    },
+    "settings": {
+      "titleEyebrow": "Study Room Preferences",
+      "title": "Display and behavior",
+      "intro": "",
+      "languageEyebrow": "Language Settings",
+      "languageTitle": "Interface language",
+      "languageIntro": "",
+      "sceneEyebrow": "Scene Settings",
+      "sceneTitle": "Study environments",
+      "sceneIntro": "",
+      "customUploadsTitle": "Custom uploads",
+      "customUploadsCopy": "",
+      "displayEyebrow": "Timer Display Settings",
+      "displayTitle": "Presentation mode",
+      "displayIntro": "",
+      "displayModes": {
+        "center_focus": {
+          "label": "Center Focus",
+          "description": "Large centered timer over the scene."
+        },
+        "minimal_overlay": {
+          "label": "Minimal Overlay",
+          "description": "Small overlay, scene takes center stage."
+        },
+        "corner_embed": {
+          "label": "Corner Embed",
+          "description": "Minimal corner timer."
+        }
+      },
+      "timerEyebrow": "Timer Behavior Settings",
+      "timerTitle": "Pomodoro engine",
+      "timerIntro": "",
+      "workMinutes": "Work minutes",
+      "shortBreakMinutes": "Short break",
+      "longBreakMinutes": "Long break",
+      "longBreakInterval": "Long break every",
+      "completionBellTitle": "Completion bell",
+      "completionBellCopy": "",
+      "saveTimer": "Save Timer Settings",
+      "audioEyebrow": "",
+      "audioTitle": "Cloud music",
+      "audioCopy": ""
+    },
+    "music": {
+      "eyebrow": "Ambient Music",
+      "trackLabel": "Track",
+      "playback": {
+        "idle": "Idle",
+        "playing": "Playing",
+        "paused": "Paused"
+      },
+      "source": {
+        "localLabel": "Local Library",
+        "localDescription": "",
+        "neteaseLabel": "Cloud Music",
+        "neteaseDescription": ""
+      },
+      "tracks": {
+        "deep-focus-placeholder": {
+          "title": "Deep Focus",
+          "note": ""
+        },
+        "late-night-placeholder": {
+          "title": "Late Night",
+          "note": ""
+        }
+      },
+      "errors": {
+        "blocked": "Playback is blocked until the browser receives a user gesture.",
+        "enableSound": "Enable sound before starting ambient playback."
+      },
+      "noTrack": "No track",
+      "loginNetEase": "Login NetEase",
+      "myPlaylists": "My Playlists",
+      "sendCode": "Send Code",
+      "resend": "Resend",
+      "verifyAndLogin": "Verify & Login",
+      "emailOrPhonePlaceholder": "Email or phone number",
+      "phonePlaceholder": "Phone number",
+      "smsCodePlaceholder": "SMS code"
+    },
+    "todo": {
+      "eyebrow": "Task Capture",
+      "title": "Current todos",
+      "intro": "Compact local task list for the current study session.",
+      "inputPlaceholder": "Add a small study task",
+      "empty": "No tasks yet.",
+      "loginToSync": "Login to sync tasks across sessions."
+    },
+    "statistics": {
+      "eyebrow": "Statistics",
+      "title": "Session counters",
+      "editNickname": "Edit nickname",
+      "nicknamePlaceholder": "Enter your display name",
+      "nicknameUpdated": "Nickname updated",
+      "intro": "",
+      "completedPomodoros": "Completed Pomodoros",
+      "completedBreaks": "Completed breaks",
+      "pomodorosToday": "Pomodoros today",
+      "totalCompleted": "Total completed",
+      "focusTime": "Focus time",
+      "last12Weeks": "Last 12 weeks",
+      "less": "Less",
+      "more": "More",
+      "nicknameOptional": "Nickname (optional)",
+      "futureCopy": ""
+    },
+    "auth": {
+      "eyebrow": "Account",
+      "title": "Login",
+      "intro": "",
+      "sessionHandoff": "Session handoff",
+      "protectedPresets": "Protected presets",
+      "tokenStorage": "Backend token storage",
+      "futureCopy": ""
+    },
+    "scenes": {
+      "coastalCafe": {
+        "name": "Coastal Cafe",
+        "description": "Bright open-air cafe loop for lighter daytime focus sessions."
+      },
+      "retroDesk": {
+        "name": "Retro Desk",
+        "description": "Warmer CRT desk loop with a denser night-study atmosphere."
+      },
+      "aquariumRoom": {
+        "name": "Aquarium Room",
+        "description": "Quiet indoor loop with aquarium glow for late-night deep work."
+      }
+    }
+  }
+}
