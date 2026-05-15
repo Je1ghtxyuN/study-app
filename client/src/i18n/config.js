@@ -1,8 +1,8 @@
-import siteIdentity from '../../../../packages/shared-config/site-identity.json'
-import enLocale from '../../../../packages/shared-assets/locales/site-ui/en.json'
-import jaLocale from '../../../../packages/shared-assets/locales/site-ui/ja.json'
-import zhCnLocale from '../../../../packages/shared-assets/locales/site-ui/zh-CN.json'
-import zhTwLocale from '../../../../packages/shared-assets/locales/site-ui/zh-TW.json'
+import siteIdentity from '../../../site.config.json'
+import enLocale from '../../../assets/locales/site-ui/en.json'
+import jaLocale from '../../../assets/locales/site-ui/ja.json'
+import zhCnLocale from '../../../assets/locales/site-ui/zh-CN.json'
+import zhTwLocale from '../../../assets/locales/site-ui/zh-TW.json'
 
 export const SITE_LOCALE_STORAGE_KEY = 'site-locale'
 

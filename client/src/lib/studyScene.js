@@ -1,9 +1,9 @@
-import sceneOneLoop from '../../../../packages/shared-assets/videos/1.mp4'
-import sceneOnePoster from '../../../../packages/shared-assets/videos/1-poster.png'
-import sceneTwoLoop from '../../../../packages/shared-assets/videos/2.mp4'
-import sceneTwoPoster from '../../../../packages/shared-assets/videos/2-poster.png'
-import sceneThreeLoop from '../../../../packages/shared-assets/videos/3.mp4'
-import sceneThreePoster from '../../../../packages/shared-assets/videos/3-poster.png'
+import sceneOneLoop from '../../../assets/videos/1.mp4'
+import sceneOnePoster from '../../../assets/videos/1-poster.png'
+import sceneTwoLoop from '../../../assets/videos/2.mp4'
+import sceneTwoPoster from '../../../assets/videos/2-poster.png'
+import sceneThreeLoop from '../../../assets/videos/3.mp4'
+import sceneThreePoster from '../../../assets/videos/3-poster.png'
 
 // Preload all scene videos as soon as this module loads
 const PRELOAD_VIDEOS = [sceneOneLoop, sceneTwoLoop, sceneThreeLoop]

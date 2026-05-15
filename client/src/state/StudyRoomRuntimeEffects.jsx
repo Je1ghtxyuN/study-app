@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import bellCueSource from '../../../../packages/shared-assets/se/BreakOrWork.mp3'
+import bellCueSource from '../../../assets/se/BreakOrWork.mp3'
 import { writePersistedStudyRoomState } from './studyRoomStorage.js'
 import { useStudyRoomState } from './useStudyRoom.js'
 import { recordPomodoro, saveUserPrefs, fetchCurrentUser } from './studySessionRecorder.js'

@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.DEV ? 'http://localhost:3001' : ''
+const API_BASE = import.meta.env.DEV ? 'http://localhost:3002' : ''
 
 export async function recordPomodoro(workDuration) {
   try {
