@@ -1,7 +1,7 @@
 import { getCookie } from 'hono/cookie'
 import { prisma } from '../db/client.js'
 
-const SESSION_COOKIE = 'session_id'
+const SESSION_COOKIE = 'study_session'
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 
 export { SESSION_COOKIE, SESSION_DURATION_MS }
