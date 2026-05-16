@@ -8,6 +8,7 @@ import { music } from './routes/music.js'
 import { userAuth } from './routes/user-auth.js'
 import { studySessions } from './routes/study-sessions.js'
 import { todos } from './routes/todos.js'
+import { guest } from './routes/guest.js'
 
 export function createApp() {
   const app = new Hono()
@@ -21,6 +22,7 @@ export function createApp() {
   app.use('*', authMiddleware())
 
   app.route('/', health)
+  app.route('/guest', guest)
   app.route('/music', music)
   app.route('/user', userAuth)
   app.route('/study-sessions', studySessions)
