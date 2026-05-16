@@ -7,6 +7,14 @@ import { SESSION_DURATION_MS } from '../middleware/auth.js'
 const guest = new Hono()
 
 guest.post('/', async (c) => {
+  // If the caller already has a valid non-guest session, don't overwrite it
+  const currentUser = c.get('user')
+  if (currentUser && !currentUser.isGuest) {
+    return c.json({
+      user: { id: currentUser.id, nickname: currentUser.nickname, isGuest: false },
+    })
+  }
+
   const id = crypto.randomUUID()
   const suffix = id.slice(0, 8)
 

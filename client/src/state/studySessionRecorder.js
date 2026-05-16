@@ -31,6 +31,7 @@ export async function ensureGuest() {
 void ensureGuest()
 
 export async function recordPomodoro(workDuration) {
+  await ensureGuest()
   try {
     await fetch(`${API_BASE}/study-sessions`, {
       method: 'POST',
