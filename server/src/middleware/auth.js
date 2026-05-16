@@ -35,6 +35,15 @@ export function authMiddleware() {
       const { password: _, ...safeUser } = user
       c.set('user', safeUser)
       c.set('sessionId', session.id)
+      c.set('isGuest', user.isGuest === true)
+
+      // Update lastActiveAt for guest users (fire-and-forget, don't block request)
+      if (user.isGuest) {
+        prisma.studyUser.update({
+          where: { id: user.id },
+          data: { lastActiveAt: new Date() },
+        }).catch(() => {})
+      }
     } catch (err) {
       console.error('[auth] session lookup failed:', err)
       c.set('user', null)
