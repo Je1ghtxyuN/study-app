@@ -41,7 +41,8 @@ studySessions.get('/stats', async (c) => {
   weekStart.setDate(weekStart.getDate() - weekStart.getDay())
 
   const userId = await resolveUserId(c)
-  const userFilter = userId ? { userId } : {}
+  if (!userId) return c.json({ total: 0, today: 0, thisWeek: 0, totalMinutes: 0 })
+  const userFilter = { userId }
 
   const [total, today, thisWeek, totalMinutes] = await Promise.all([
     prisma.studySession.count({ where: userFilter }),
@@ -57,7 +58,9 @@ studySessions.get('/stats', async (c) => {
 studySessions.get('/daily', async (c) => {
   const days = Math.min(365, Math.max(7, Number(c.req.query('days')) || 84))
   const userId = await resolveUserId(c)
-  const userFilter = userId ? { userId } : {}
+  if (!userId) return c.json({ daily: [] })
+
+  const userFilter = { userId }
 
   const since = new Date()
   since.setDate(since.getDate() - days)
@@ -89,9 +92,13 @@ studySessions.get('/daily', async (c) => {
 
 // GET /study-sessions — recent sessions
 studySessions.get('/', async (c) => {
+  const userId = await resolveUserId(c)
+  if (!userId) return c.json({ sessions: [], total: 0 })
+
   const limit = Math.min(50, Math.max(1, Number(c.req.query('limit')) || 20))
 
   const sessions = await prisma.studySession.findMany({
+    where: { userId },
     orderBy: { completedAt: 'desc' },
     take: limit,
   })
