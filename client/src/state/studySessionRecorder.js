@@ -15,7 +15,7 @@ export async function ensureGuest() {
         })
         if (!res.ok) return
         const data = await res.json()
-        if (data.user) {
+        if (data.user?.id) {
           sessionStorage.setItem('guestId', data.user.id)
         }
       } catch {
@@ -28,7 +28,7 @@ export async function ensureGuest() {
 }
 
 // Auto-invoke on module load
-ensureGuest()
+void ensureGuest()
 
 export async function recordPomodoro(workDuration) {
   try {
