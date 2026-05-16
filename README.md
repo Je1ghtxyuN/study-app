@@ -4,7 +4,7 @@
 
 <div align="center">
 
-<img src="https://img.icons8.com/fluency/96/study.png" width="100" height="100" alt="Study Room Logo" />
+<img src="assets/study-icon.svg" width="100" height="100" alt="Study Room Logo" />
 
 # Study Room
 
