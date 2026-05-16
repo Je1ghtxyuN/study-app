@@ -12,8 +12,7 @@ async function migrateGuestData(guestUserId, realUserId) {
   const guest = await prisma.studyUser.findUnique({ where: { id: guestUserId } })
   if (!guest || !guest.isGuest) return
 
-  // Bulk-update guest's sessions and todos to real user
-  await Promise.all([
+  await prisma.$transaction([
     prisma.studySession.updateMany({
       where: { userId: guestUserId },
       data: { userId: realUserId },
@@ -22,11 +21,9 @@ async function migrateGuestData(guestUserId, realUserId) {
       where: { userId: guestUserId },
       data: { userId: realUserId },
     }),
+    prisma.session.deleteMany({ where: { userId: guestUserId } }),
+    prisma.studyUser.delete({ where: { id: guestUserId } }),
   ])
-
-  // Delete guest's session, then the guest user
-  await prisma.session.deleteMany({ where: { userId: guestUserId } })
-  await prisma.studyUser.delete({ where: { id: guestUserId } })
 }
 
 const userAuth = new Hono()
@@ -48,12 +45,17 @@ userAuth.post('/register', async (c) => {
   })
 
   // Migrate data from current guest session if exists
-  const currentSessionId = c.req.header('Cookie')?.match(/study_session=([^;]+)/)?.[1]
-  if (currentSessionId) {
-    const currentSession = await prisma.session.findUnique({ where: { id: currentSessionId } })
-    if (currentSession) {
-      await migrateGuestData(currentSession.userId, user.id)
+  try {
+    const currentSessionId = c.req.header('Cookie')?.match(/study_session=([^;]+)/)?.[1]
+    if (currentSessionId) {
+      const currentSession = await prisma.session.findUnique({ where: { id: currentSessionId } })
+      if (currentSession) {
+        await migrateGuestData(currentSession.userId, user.id)
+      }
     }
+  } catch (err) {
+    console.error('[register] guest migration failed:', err)
+    // Don't fail registration — the user account was created successfully
   }
 
   return c.json({ user: { id: user.id, email: user.email, nickname: user.nickname } }, 201)
