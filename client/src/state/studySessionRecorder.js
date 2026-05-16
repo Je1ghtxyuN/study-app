@@ -1,5 +1,35 @@
 const API_BASE = import.meta.env.DEV ? 'http://localhost:3002' : ''
 
+let guestPromise = null
+
+export async function ensureGuest() {
+  const alreadyGuest = sessionStorage.getItem('guestId')
+  if (alreadyGuest) return
+
+  if (!guestPromise) {
+    guestPromise = (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/guest`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+        if (!res.ok) return
+        const data = await res.json()
+        if (data.user) {
+          sessionStorage.setItem('guestId', data.user.id)
+        }
+      } catch {
+        // If guest creation fails, the app still works — data just won't save
+      }
+    })()
+  }
+
+  await guestPromise
+}
+
+// Auto-invoke on module load
+ensureGuest()
+
 export async function recordPomodoro(workDuration) {
   try {
     await fetch(`${API_BASE}/study-sessions`, {
