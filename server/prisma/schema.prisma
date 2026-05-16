@@ -22,6 +22,8 @@ model StudyUser {
   avatarUrl    String?
   githubId     String?  @unique
   preferences  Json?
+  isGuest      Boolean  @default(false)
+  lastActiveAt DateTime @default(now())
   createdAt    DateTime @default(now())
 }
 
