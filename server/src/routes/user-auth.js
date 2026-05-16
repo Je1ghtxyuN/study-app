@@ -5,6 +5,30 @@ import { prisma } from '../db/client.js'
 import { env } from '../config/env.js'
 import { SESSION_DURATION_MS } from '../middleware/auth.js'
 
+// Migrate guest data to real user, then delete the guest
+async function migrateGuestData(guestUserId, realUserId) {
+  if (!guestUserId || guestUserId === realUserId) return
+
+  const guest = await prisma.studyUser.findUnique({ where: { id: guestUserId } })
+  if (!guest || !guest.isGuest) return
+
+  // Bulk-update guest's sessions and todos to real user
+  await Promise.all([
+    prisma.studySession.updateMany({
+      where: { userId: guestUserId },
+      data: { userId: realUserId },
+    }),
+    prisma.todoItem.updateMany({
+      where: { userId: guestUserId },
+      data: { userId: realUserId },
+    }),
+  ])
+
+  // Delete guest's session, then the guest user
+  await prisma.session.deleteMany({ where: { userId: guestUserId } })
+  await prisma.studyUser.delete({ where: { id: guestUserId } })
+}
+
 const userAuth = new Hono()
 
 // POST /user/register — create account with email + password
@@ -23,6 +47,15 @@ userAuth.post('/register', async (c) => {
     data: { email, password: hash, nickname: nickname || email.split('@')[0] },
   })
 
+  // Migrate data from current guest session if exists
+  const currentSessionId = c.req.header('Cookie')?.match(/study_session=([^;]+)/)?.[1]
+  if (currentSessionId) {
+    const currentSession = await prisma.session.findUnique({ where: { id: currentSessionId } })
+    if (currentSession) {
+      await migrateGuestData(currentSession.userId, user.id)
+    }
+  }
+
   return c.json({ user: { id: user.id, email: user.email, nickname: user.nickname } }, 201)
 })
 
@@ -38,6 +71,15 @@ userAuth.post('/login', async (c) => {
 
   const valid = await bcrypt.compare(password, user.password)
   if (!valid) return c.json({ error: 'Invalid credentials' }, 401)
+
+  // Migrate data from current guest session if exists
+  const currentSessionId = c.req.header('Cookie')?.match(/study_session=([^;]+)/)?.[1]
+  if (currentSessionId) {
+    const currentSession = await prisma.session.findUnique({ where: { id: currentSessionId } })
+    if (currentSession) {
+      await migrateGuestData(currentSession.userId, user.id)
+    }
+  }
 
   // Issue session cookie for Study Room
   const expiresAt = new Date(Date.now() + SESSION_DURATION_MS)
@@ -194,6 +236,15 @@ async function handleGitHubOAuth(c, code) {
     update: { githubId, avatarUrl: githubUser.avatar_url, nickname: githubUser.login },
     create: { email, githubId, avatarUrl: githubUser.avatar_url, nickname: githubUser.login },
   })
+
+  // Migrate data from current guest session if exists
+  const currentSessionId = c.req.header('Cookie')?.match(/study_session=([^;]+)/)?.[1]
+  if (currentSessionId) {
+    const currentSession = await prisma.session.findUnique({ where: { id: currentSessionId } })
+    if (currentSession) {
+      await migrateGuestData(currentSession.userId, user.id)
+    }
+  }
 
   const expiresAt = new Date(Date.now() + SESSION_DURATION_MS)
   const session = await prisma.session.create({ data: { userId: user.id, expiresAt } })
