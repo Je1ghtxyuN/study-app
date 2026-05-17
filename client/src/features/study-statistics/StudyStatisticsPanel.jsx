@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useStudyRoomLocale } from '../../i18n/useStudyRoomLocale.js'
 import { useStudyRoomState } from '../../state/useStudyRoom.js'
-import { fetchStats, fetchDailyStats, fetchCurrentUser, loginUser, registerUser, logoutUser, updateNickname } from '../../state/studySessionRecorder.js'
-
-const GITHUB_CLIENT_ID = 'Ov23liu6udKTVF2eWygV'
-const DEV = import.meta.env.DEV
-const REDIRECT_URI = DEV ? 'http://localhost:5173/' : 'https://je1ght.top/study-app/'
+import { fetchStats, fetchDailyStats, fetchCurrentUser, loginUser, registerUser, logoutUser, updateNickname, getGitHubOAuthUrl } from '../../state/studySessionRecorder.js'
 
 export function StudyStatisticsPanel() {
   const { timer } = useStudyRoomState()
@@ -72,7 +68,10 @@ export function StudyStatisticsPanel() {
     } catch (err) { setEditNickError(err.message) }
   }
 
-  const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=user:email`
+  const handleGitHubLogin = async () => {
+    const url = await getGitHubOAuthUrl()
+    if (url) window.location.href = url
+  }
 
   const hours = Math.floor(stats.totalMinutes / 60)
   const mins = stats.totalMinutes % 60
@@ -140,9 +139,9 @@ export function StudyStatisticsPanel() {
         <div className="stats-login-actions">
           <button type="button" className="button button--primary button--sm" onClick={() => setLoginMode('login')}>{t('common.login', {}, 'Login')}</button>
           <button type="button" className="button button--ghost button--sm" onClick={() => setLoginMode('register')}>{t('common.register', {}, 'Register')}</button>
-          <a href={githubOAuthUrl} className="button button--ghost button--sm stats-gh-btn">
+          <button type="button" onClick={handleGitHubLogin} className="button button--ghost button--sm stats-gh-btn">
             <i className="fab fa-github" /> GitHub
-          </a>
+          </button>
         </div>
       )}
 

@@ -171,7 +171,8 @@ userAuth.post('/logout', async (c) => {
 userAuth.get('/github', (c) => {
   const clientId = env.GITHUB_CLIENT_ID
   if (!clientId) return c.json({ error: 'GitHub OAuth not configured' }, 501)
-  const redirectUri = `${c.req.url.replace(/\/user\/github.*/, '')}/user/github/callback`
+  const protocol = env.COOKIE_DOMAIN === 'localhost' ? 'http' : 'https'
+  const redirectUri = `${protocol}://${env.COOKIE_DOMAIN}/user/github/callback`
   const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user:email`
   return c.json({ url })
 })
