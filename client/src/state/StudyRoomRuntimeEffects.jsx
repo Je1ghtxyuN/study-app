@@ -8,10 +8,8 @@ export function StudyRoomRuntimeEffects() {
   const state = useStudyRoomState()
   const bellAudioRef = useRef(null)
   const lastHandledTransitionIdRef = useRef(0)
+  const lastRecordedTransitionIdRef = useRef(0)
   const accumulatedWorkSecondsRef = useRef(0)
-  const prevSessionTypeRef = useRef(null)
-  const prevStatusRef = useRef(null)
-  const prevTickRemainingRef = useRef(null)
   const { preferences, timer } = state
   const {
     locale,
@@ -96,54 +94,39 @@ export function StudyRoomRuntimeEffects() {
     }
   }
 
-  // Continuous work time tracking — accumulate seconds, flush every 60s
+  // Continuous work time tracking — accumulate seconds in memory, flush only on
+  // page hide/close so time is never lost.  Pomodoro count is 1 per completed
+  // work cycle (recorded via lastAutoTransition), not 1 per minute.
   useEffect(() => {
     if (timer.status !== 'running' || timer.sessionType !== 'work') return
 
-    // Track remaining seconds so we can detect natural completion vs manual switch
-    prevTickRemainingRef.current = timer.remainingSeconds
-
     const interval = setInterval(() => {
       accumulatedWorkSecondsRef.current += 1
-      if (accumulatedWorkSecondsRef.current >= 60) {
-        recordPomodoro(1) // 1 minute
-        accumulatedWorkSecondsRef.current -= 60
-      }
     }, 1000)
 
-    // Flush on page hide/close
     const handleBeforeUnload = () => { flushAccumulatedRef.current() }
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') flushAccumulatedRef.current()
-    }
     window.addEventListener('beforeunload', handleBeforeUnload)
-    document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
       clearInterval(interval)
       window.removeEventListener('beforeunload', handleBeforeUnload)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [timer.status, timer.sessionType])
 
-  // Detect session transitions — flush remaining time + record completed work sessions
+  // Record completed work sessions via lastAutoTransition (set by reducer on
+  // natural timer completion). This records exactly 1 Pomodoro per completed
+  // work cycle. Accumulated seconds are discarded — the full session duration
+  // is what counts.
   useEffect(() => {
-    const prevSession = prevSessionTypeRef.current
-    const prevStatus = prevStatusRef.current
-    prevSessionTypeRef.current = timer.sessionType
-    prevStatusRef.current = timer.status
-    if (prevSession === null) return
+    const transition = lastAutoTransition
+    if (!transition) return
+    if (transition.fromSessionType !== 'work') return
+    if (transition.id === lastRecordedTransitionIdRef.current) return
 
-    // Flush any remaining accumulated seconds (convert to minutes)
-    flushAccumulatedRef.current()
-
-    // Natural work completion: timer hit zero and auto-transitioned to break
-    if (prevSession === 'work' && timer.sessionType !== 'work' && prevStatus === 'running') {
-      if (prevTickRemainingRef.current !== null && prevTickRemainingRef.current <= 0) {
-        recordPomodoro(Math.round(durations.work / 60))
-      }
-    }
-  }, [timer.sessionType, timer.status, durations.work])
+    lastRecordedTransitionIdRef.current = transition.id
+    accumulatedWorkSecondsRef.current = 0
+    recordPomodoro(Math.round(durations.work / 60))
+  }, [lastAutoTransition, durations.work])
 
   // Bell sound on session transition
   useEffect(() => {
