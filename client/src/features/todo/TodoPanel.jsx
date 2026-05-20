@@ -1,5 +1,6 @@
 import { useStudyRoomLocale } from '../../i18n/useStudyRoomLocale.js'
 import { useTodoList } from './useTodoList.js'
+import { Skeleton } from '../../components/Skeleton.jsx'
 
 export function TodoPanel() {
   const { t } = useStudyRoomLocale()
@@ -21,7 +22,7 @@ export function TodoPanel() {
             {t('studyRoom.todo.title', {}, 'Current todos')}
           </h2>
         </div>
-        <span className="floating-widget__badge">{items.length}</span>
+        <span className="floating-widget__badge">{loading ? '...' : items.length}</span>
       </div>
 
       <form className="widget-inline-form" onSubmit={handleSubmit}>
@@ -41,10 +42,12 @@ export function TodoPanel() {
         </button>
       </form>
 
-      {!userId ? (
+      {!userId && !loading ? (
         <p className="floating-widget__meta">{t('studyRoom.todo.loginToSync', {}, 'Login to sync tasks across sessions.')}</p>
       ) : loading ? (
-        <p className="floating-widget__meta">{t('common.loading', {}, 'Loading...')}</p>
+        <div className="todo-widget__list">
+          <Skeleton height="2.5rem" count={3} />
+        </div>
       ) : items.length ? (
         <ul className="todo-widget__list">
           {items.map((item) => (

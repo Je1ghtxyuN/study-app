@@ -1,9 +1,10 @@
 import { useEffect, useReducer, useCallback, useState } from 'react'
 import { fetchCurrentUser } from '../../state/studySessionRecorder.js'
+import { getCachedData } from '../../lib/panelPrefetchCache.js'
 
 const API_BASE = import.meta.env.DEV ? 'http://localhost:3001' : ''
 
-const initialTodoState = { draft: '', items: [], loading: false }
+const initialTodoState = { draft: '', items: [], loading: true }
 
 function todoReducer(state, action) {
   switch (action.type) {
@@ -23,11 +24,18 @@ export function useTodoList() {
   const [userId, setUserId] = useState(null)
 
   useEffect(() => {
+    const cached = getCachedData('todo')
+    if (cached) {
+      setUserId(cached.userId)
+      dispatch({ type: 'todo/set-items', items: cached.items })
+      return
+    }
     fetchCurrentUser().then((u) => setUserId(u?.id || null))
   }, [])
 
   // Load todos when user changes
   useEffect(() => {
+    if (state.items.length > 0 && !state.loading) return
     if (!userId) { dispatch({ type: 'todo/set-items', items: [] }); return }
     dispatch({ type: 'todo/set-loading' })
     fetch(`${API_BASE}/todos`, { credentials: 'include' })
