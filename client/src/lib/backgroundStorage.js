@@ -84,14 +84,17 @@ export async function saveBackground(file) {
     createdAt: Date.now(),
   }
   const db = await openDB()
-  const tx = db.transaction(STORE_NAME, 'readwrite')
-  tx.objectStore(STORE_NAME).put(record)
-  await new Promise((resolve, reject) => {
-    tx.oncomplete = resolve
-    tx.onerror = () => reject(tx.error)
-  })
-  db.close()
-  return record
+  try {
+    const tx = db.transaction(STORE_NAME, 'readwrite')
+    tx.objectStore(STORE_NAME).put(record)
+    await new Promise((resolve, reject) => {
+      tx.oncomplete = resolve
+      tx.onerror = () => reject(tx.error)
+    })
+    return record
+  } finally {
+    db.close()
+  }
 }
 
 export async function listBackgrounds() {
@@ -109,43 +112,52 @@ export async function listBackgrounds() {
 
 export async function getBackgroundBlob(id) {
   const db = await openDB()
-  const tx = db.transaction(STORE_NAME, 'readonly')
-  const request = tx.objectStore(STORE_NAME).get(id)
-  const record = await new Promise((resolve, reject) => {
-    request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error)
-  })
-  db.close()
-  return record?.blob ?? null
+  try {
+    const tx = db.transaction(STORE_NAME, 'readonly')
+    const request = tx.objectStore(STORE_NAME).get(id)
+    const record = await new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    return record?.blob ?? null
+  } finally {
+    db.close()
+  }
 }
 
 export async function deleteBackground(id) {
   const db = await openDB()
-  const tx = db.transaction(STORE_NAME, 'readwrite')
-  tx.objectStore(STORE_NAME).delete(id)
-  await new Promise((resolve, reject) => {
-    tx.oncomplete = resolve
-    tx.onerror = () => reject(tx.error)
-  })
-  db.close()
+  try {
+    const tx = db.transaction(STORE_NAME, 'readwrite')
+    tx.objectStore(STORE_NAME).delete(id)
+    await new Promise((resolve, reject) => {
+      tx.oncomplete = resolve
+      tx.onerror = () => reject(tx.error)
+    })
+  } finally {
+    db.close()
+  }
 }
 
 export async function updateServerId(localId, serverId) {
   const db = await openDB()
-  const tx = db.transaction(STORE_NAME, 'readwrite')
-  const store = tx.objectStore(STORE_NAME)
-  const request = store.get(localId)
-  const record = await new Promise((resolve, reject) => {
-    request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error)
-  })
-  if (record) {
-    record.serverId = serverId
-    store.put(record)
+  try {
+    const tx = db.transaction(STORE_NAME, 'readwrite')
+    const store = tx.objectStore(STORE_NAME)
+    const request = store.get(localId)
+    const record = await new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    if (record) {
+      record.serverId = serverId
+      store.put(record)
+    }
+    await new Promise((resolve, reject) => {
+      tx.oncomplete = resolve
+      tx.onerror = () => reject(tx.error)
+    })
+  } finally {
+    db.close()
   }
-  await new Promise((resolve, reject) => {
-    tx.oncomplete = resolve
-    tx.onerror = () => reject(tx.error)
-  })
-  db.close()
 }
