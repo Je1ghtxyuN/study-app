@@ -333,3 +333,78 @@ export function resolveStudyScenePresentation(
     grainDriftY: reactiveAtmosphere.grainDriftY ?? '0.7%',
   }
 }
+
+const DEFAULT_CUSTOM_ATMOSPHERE = Object.freeze({
+  work: Object.freeze({
+    overlayShift: Object.freeze({ idle: 0.04, focus: 0.08 }),
+    highlightOpacity: 0.08,
+    glowOpacity: 0.66,
+    glowScale: 1.03,
+    glowDriftY: '-1.2%',
+    vignetteOpacity: 0.8,
+    mediaBrightness: 0.72,
+    mediaSaturation: 1.0,
+    mediaContrast: 1.04,
+    motionDurationScale: 1.0,
+    overlayDriftY: '-0.5%',
+    grainDriftX: '-1.1%',
+    grainDriftY: '0.65%',
+  }),
+  shortBreak: Object.freeze({
+    overlayShift: Object.freeze({ idle: -0.03, focus: -0.06 }),
+    highlightOpacity: 0.12,
+    glowOpacity: 0.76,
+    glowScale: 1.06,
+    glowDriftY: '-1.5%',
+    vignetteOpacity: 0.66,
+    mediaBrightness: 0.8,
+    mediaSaturation: 1.04,
+    mediaContrast: 1.02,
+    motionDurationScale: 1.06,
+    overlayDriftY: '-0.38%',
+    grainDriftX: '-0.9%',
+    grainDriftY: '0.55%',
+  }),
+  longBreak: Object.freeze({
+    overlayShift: Object.freeze({ idle: -0.06, focus: -0.1 }),
+    highlightOpacity: 0.15,
+    glowOpacity: 0.82,
+    glowScale: 1.08,
+    glowDriftY: '-1.7%',
+    vignetteOpacity: 0.6,
+    mediaBrightness: 0.84,
+    mediaSaturation: 1.06,
+    mediaContrast: 1.0,
+    motionDurationScale: 1.15,
+    overlayDriftY: '-0.3%',
+    grainDriftX: '-0.7%',
+    grainDriftY: '0.45%',
+  }),
+})
+
+export function getCustomSceneDefinition(id, { name, type, objectUrl }) {
+  return createSceneDefinition({
+    id,
+    localeKey: null,
+    name: name || 'Custom Background',
+    label: name || 'Custom Background',
+    description: 'User-uploaded custom background',
+    media: {
+      type,
+      src: objectUrl,
+      poster: type === 'image' ? objectUrl : '',
+    },
+    backgroundPosition: 'center center',
+    backgroundScale: 1.0,
+    idleOverlayStrength: 0.3,
+    focusOverlayStrength: 0.5,
+    ambientGlow: 'rgba(120, 140, 180, 0.15)',
+    accentGlow: 'rgba(180, 160, 120, 0.1)',
+    vignetteColor: 'rgba(0, 0, 0, 0.6)',
+    reactiveAtmosphere: {
+      work: DEFAULT_CUSTOM_ATMOSPHERE.work,
+      shortBreak: DEFAULT_CUSTOM_ATMOSPHERE.shortBreak,
+      longBreak: DEFAULT_CUSTOM_ATMOSPHERE.longBreak,
+    },
+  })
+}
