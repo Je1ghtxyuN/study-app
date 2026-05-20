@@ -42,6 +42,57 @@ export async function getPlaylistDetail(id) {
   }
 }
 
+export async function getAlbumDetail(id) {
+  const api = getNeteaseApi()
+
+  try {
+    const result = await api.album({
+      id,
+      cookie: userCookies || '',
+    })
+
+    if (result.body.code !== 200) {
+      throw new Error(result.body.message || `Failed to fetch album ${id}`)
+    }
+
+    const album = result.body.album
+    const songs = result.body.songs || []
+    return {
+      id: album.id,
+      name: album.name,
+      coverImgUrl: album.picUrl,
+      description: album.description || '',
+      trackCount: album.size || songs.length,
+      tracks: songs.map(formatTrack),
+    }
+  } catch (err) {
+    console.error('[music] getAlbumDetail error:', err.message)
+    throw err
+  }
+}
+
+export async function scrobbleSong(id, sourceId, time) {
+  const api = getNeteaseApi()
+
+  if (!userCookies) {
+    return { ok: false, message: 'Not logged in' }
+  }
+
+  try {
+    const result = await api.scrobble({
+      id,
+      sourceid: sourceId || '',
+      time: Math.round(time),
+      cookie: userCookies,
+    })
+
+    return { ok: result.body.code === 200 }
+  } catch (err) {
+    console.error('[music] scrobble error:', err.message)
+    return { ok: false, message: err.message }
+  }
+}
+
 export async function getSongUrl(id) {
   const api = getNeteaseApi()
 
