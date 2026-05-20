@@ -51,6 +51,12 @@ export function useAmbientMusicController() {
   const [currentPlaylistId, setCurrentPlaylistId] = useState(() => {
     try { return localStorage.getItem('selectedPlaylistId') || '' } catch { return '' }
   })
+  // Scrobble tracking
+  const scrobbledRef = useRef(new Set())
+  const playStartRef = useRef(null)
+  const accumulatedRef = useRef(0)
+  const currentPlaylistIdRef = useRef(currentPlaylistId)
+  useEffect(() => { currentPlaylistIdRef.current = currentPlaylistId }, [currentPlaylistId])
   const sourceType = MUSIC_SOURCE_TYPES.netease
   const trackSource = getAmbientTrackSource(sourceType)
   const audio = getGlobalAudio()
@@ -85,6 +91,23 @@ export function useAmbientMusicController() {
     wasPlayingRef.current = playbackState === 'playing'
   }, [playbackState])
 
+  // Track play time for scrobble
+  useEffect(() => {
+    if (playbackState === 'playing') {
+      playStartRef.current = Date.now()
+    } else {
+      if (playStartRef.current) {
+        accumulatedRef.current += (Date.now() - playStartRef.current) / 1000
+        playStartRef.current = null
+      }
+      // Scrobble if threshold met and not yet scrobbled
+      if (accumulatedRef.current >= 30 && neteaseUser && !scrobbledRef.current.has(currentTrack.id)) {
+        scrobbledRef.current.add(currentTrack.id)
+        scrobbleSong(currentTrack.id, currentPlaylistIdRef.current, accumulatedRef.current)
+      }
+    }
+  }, [playbackState, neteaseUser, currentTrack.id])
+
   // Fetch song URL when track changes
   useEffect(() => {
     if (sourceType !== MUSIC_SOURCE_TYPES.netease) return
@@ -113,6 +136,18 @@ export function useAmbientMusicController() {
 
   // Switch track — skip if audio already has this track loaded
   useEffect(() => {
+    // Scrobble previous track if threshold met
+    if (lastSetTrackId && lastSetTrackId !== currentTrack.id) {
+      if (playStartRef.current) {
+        accumulatedRef.current += (Date.now() - playStartRef.current) / 1000
+        playStartRef.current = null
+      }
+      if (accumulatedRef.current >= 30 && neteaseUser && !scrobbledRef.current.has(lastSetTrackId)) {
+        scrobbledRef.current.add(lastSetTrackId)
+        scrobbleSong(lastSetTrackId, currentPlaylistIdRef.current, accumulatedRef.current)
+      }
+      accumulatedRef.current = 0
+    }
     if (!currentTrack.src) return
     if (lastSetTrackId === currentTrack.id) {
       const ended = audio.paused && audio.currentTime >= (audio.duration || Infinity) - 0.5

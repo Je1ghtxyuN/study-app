@@ -162,7 +162,11 @@ export function AmbientMusicPanel() {
           id="playlist-select"
           className="select"
           value={currentPlaylistId}
-          onChange={(e) => { if (e.target.value) switchToPlaylist(e.target.value) }}
+          onChange={(e) => {
+            if (!e.target.value) return
+            const selected = presets.find((p) => p.id === e.target.value)
+            switchToPlaylist(e.target.value, selected?.type || 'playlist')
+          }}
         >
           {presets.length === 0 && !neteaseUser && (
             <option value="" disabled>{t('studyRoom.music.noPlaylistAvailable', {}, 'No playlists available')}</option>
