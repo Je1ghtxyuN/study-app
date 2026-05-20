@@ -8,6 +8,7 @@ import { music } from './routes/music.js'
 import { userAuth } from './routes/user-auth.js'
 import { studySessions } from './routes/study-sessions.js'
 import { todos } from './routes/todos.js'
+import { backgrounds } from './routes/backgrounds.js'
 import { guest } from './routes/guest.js'
 
 export function createApp() {
@@ -27,6 +28,7 @@ export function createApp() {
   app.route('/user', userAuth)
   app.route('/study-sessions', studySessions)
   app.route('/todos', todos)
+  app.route('/backgrounds', backgrounds)
 
   app.notFound((c) => c.json({ error: 'Not found' }, 404))
 
