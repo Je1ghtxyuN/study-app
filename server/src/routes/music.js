@@ -8,9 +8,14 @@ import {
   verifyCaptcha,
   getUserPlaylists,
 } from '../services/music.js'
-import { DEFAULT_PLAYLIST_ID } from '../config/playlists.js'
+import { PRESET_PLAYLISTS, DEFAULT_PLAYLIST_ID } from '../config/playlists.js'
 
 const music = new Hono()
+
+// Public: list preset playlists
+music.get('/presets', (c) => {
+  return c.json({ presets: PRESET_PLAYLISTS })
+})
 
 // Public: get playlist by ID (default playlist if no ID)
 music.get('/playlist/:id?', async (c) => {
