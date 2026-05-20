@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useStudyRoomLocale } from '../../i18n/useStudyRoomLocale.js'
 import { useStudyRoomState } from '../../state/useStudyRoom.js'
 import { fetchStats, fetchDailyStats, fetchCurrentUser, loginUser, registerUser, logoutUser, updateNickname, getGitHubOAuthUrl } from '../../state/studySessionRecorder.js'
+import { getCachedData } from '../../lib/panelPrefetchCache.js'
+import { Skeleton } from '../../components/Skeleton.jsx'
 
 export function StudyStatisticsPanel() {
   const { timer } = useStudyRoomState()
@@ -17,12 +19,25 @@ export function StudyStatisticsPanel() {
   const [editingNick, setEditingNick] = useState(false)
   const [editNickValue, setEditNickValue] = useState('')
   const [editNickError, setEditNickError] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const cached = getCachedData('statistics')
+    if (cached) {
+      setUser(cached.user)
+      setStats(cached.stats)
+      setDaily(cached.daily)
+      setLoading(false)
+      return
+    }
+
     fetchCurrentUser().then(setUser)
+    fetchStats().then(setStats)
+    fetchDailyStats().then((d) => { setDaily(d.daily || []); setLoading(false) })
   }, [])
 
   useEffect(() => {
+    if (timer.completedWorkCycles === 0) return
     fetchStats().then(setStats)
     fetchDailyStats().then((d) => setDaily(d.daily || []))
   }, [timer.completedWorkCycles])
@@ -147,15 +162,21 @@ export function StudyStatisticsPanel() {
 
       <div className="stats-metrics-row">
         <div className="stats-metric-card">
-          <span className="stats-metric-card__value">{stats.today || '—'}</span>
+          <span className="stats-metric-card__value">
+            {loading ? <Skeleton width="2rem" height="1.5rem" /> : (stats.today || '—')}
+          </span>
           <span className="stats-metric-card__label">{t('studyRoom.statistics.pomodorosToday', {}, 'Pomodoros today')}</span>
         </div>
         <div className="stats-metric-card">
-          <span className="stats-metric-card__value">{stats.total || '—'}</span>
+          <span className="stats-metric-card__value">
+            {loading ? <Skeleton width="2rem" height="1.5rem" /> : (stats.total || '—')}
+          </span>
           <span className="stats-metric-card__label">{t('studyRoom.statistics.totalCompleted', {}, 'Total completed')}</span>
         </div>
         <div className="stats-metric-card">
-          <span className="stats-metric-card__value">{totalTime}</span>
+          <span className="stats-metric-card__value">
+            {loading ? <Skeleton width="3rem" height="1.5rem" /> : totalTime}
+          </span>
           <span className="stats-metric-card__label">{t('studyRoom.statistics.focusTime', {}, 'Focus time')}</span>
         </div>
       </div>
