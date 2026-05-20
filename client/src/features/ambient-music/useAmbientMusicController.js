@@ -5,7 +5,7 @@ import {
   useStudyRoomState,
 } from '../../state/useStudyRoom.js'
 import { getAmbientTrackSource, MUSIC_SOURCE_TYPES } from './musicSources.js'
-import { loginNetEase, loginNetEasePhone, sendSmsCode, verifySmsCode, fetchUserPlaylists } from './neteaseSource.js'
+import { loginNetEase, loginNetEasePhone, sendSmsCode, verifySmsCode, fetchUserPlaylists, fetchPresetPlaylists } from './neteaseSource.js'
 
 const PLAY_MODES = ['loop', 'sequential', 'shuffle']
 const PLAY_MODE_ICONS = { loop: '↻', sequential: '→', shuffle: '⇄' }
@@ -47,6 +47,10 @@ export function useAmbientMusicController() {
   const [neteaseUser, setNeteaseUser] = useState(null)
   const [userPlaylists, setUserPlaylists] = useState([])
   const [loginError, setLoginError] = useState('')
+  const [presets, setPresets] = useState([])
+  const [currentPlaylistId, setCurrentPlaylistId] = useState(() => {
+    try { return localStorage.getItem('selectedPlaylistId') || '' } catch { return '' }
+  })
   const sourceType = MUSIC_SOURCE_TYPES.netease
   const trackSource = getAmbientTrackSource(sourceType)
   const audio = getGlobalAudio()
@@ -54,12 +58,19 @@ export function useAmbientMusicController() {
   const selectedTrackIndex = getTrackIndex(tracks, preferences.selectedTrackId)
   const currentTrack = tracks[selectedTrackIndex] || { id: '', title: '', src: '' }
 
-  // Load NetEase playlist on mount
+  // Load presets and initial playlist on mount
   useEffect(() => {
     setLoading(true)
-    trackSource.loadPlaylist().then(({ tracks: newTracks, name }) => {
+    fetchPresetPlaylists().then(({ presets: p }) => {
+      setPresets(p || [])
+    }).catch(() => {})
+
+    const savedPlaylistId = currentPlaylistId
+    const loadId = savedPlaylistId || undefined
+    trackSource.loadPlaylist(loadId).then(({ tracks: newTracks, name, id }) => {
       setTracks(newTracks)
       setPlaylistName(name)
+      if (id) setCurrentPlaylistId(id)
       setLoading(false)
       if (newTracks.length > 0 && !preferences.selectedTrackId) {
         setPreference('selectedTrackId', newTracks[0].id)
@@ -279,6 +290,8 @@ export function useAmbientMusicController() {
         }))
         setTracks(newTracks)
         setPlaylistName(data.playlist.name)
+        setCurrentPlaylistId(playlistId)
+        try { localStorage.setItem('selectedPlaylistId', playlistId) } catch {}
         if (newTracks.length > 0) {
           selectTrack(newTracks[0].id)
         }
@@ -289,6 +302,15 @@ export function useAmbientMusicController() {
       setLoading(false)
     }
   }, [selectTrack])
+
+  const loadCustomPlaylist = useCallback(async (input) => {
+    const match = input.match(/(\d{5,})/)
+    if (!match) {
+      setLoginError('Invalid playlist ID or URL')
+      return
+    }
+    await switchToPlaylist(match[1])
+  }, [switchToPlaylist])
 
   // Restore login state from localStorage on mount
   useEffect(() => {
@@ -336,5 +358,8 @@ export function useAmbientMusicController() {
     doSendSms,
     doSmsLogin,
     switchToPlaylist,
+    presets,
+    currentPlaylistId,
+    loadCustomPlaylist,
   }
 }
