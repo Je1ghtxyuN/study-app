@@ -7,7 +7,6 @@ import {
 function BackgroundVideo({ scene }) {
   const videoRef = useRef(null)
 
-  // Show poster immediately, video fades in when playing
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
@@ -31,6 +30,30 @@ function BackgroundVideo({ scene }) {
     >
       <source src={scene.mediaSrc} type={scene.videoType || 'video/mp4'} />
     </video>
+  )
+}
+
+function BackgroundImage({ scene }) {
+  const imgRef = useRef(null)
+
+  useEffect(() => {
+    const img = imgRef.current
+    if (!img) return
+
+    const handleLoad = () => img.classList.add('background-layer__image-el--visible')
+    img.addEventListener('load', handleLoad, { once: true })
+
+    return () => img.removeEventListener('load', handleLoad)
+  }, [scene.mediaSrc])
+
+  return (
+    <img
+      ref={imgRef}
+      className="background-layer__image-el"
+      src={scene.mediaSrc}
+      alt=""
+      draggable={false}
+    />
   )
 }
 
@@ -62,6 +85,7 @@ export function BackgroundLayer({ scene, presentation }) {
 
   const mediaType = activeScene.mediaType || 'image'
   const hasVideoLayer = mediaType === 'video' && activeScene.mediaSrc
+  const hasImageLayer = mediaType === 'image' && activeScene.mediaSrc
 
   return (
     <div
@@ -73,6 +97,7 @@ export function BackgroundLayer({ scene, presentation }) {
     >
       <div className="background-layer__media">
         <div className="background-layer__image" />
+        {hasImageLayer ? <BackgroundImage key={activeScene.id} scene={activeScene} /> : null}
         {hasVideoLayer ? <BackgroundVideo key={activeScene.id} scene={activeScene} /> : null}
       </div>
       <div className="background-layer__ambient-glow" />
