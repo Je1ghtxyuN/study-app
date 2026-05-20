@@ -88,6 +88,27 @@ export async function fetchPresetPlaylists() {
   return res.json()
 }
 
+export async function fetchPlaylistById(id, type = 'playlist') {
+  const url = type === 'album'
+    ? `${API_BASE}/music/playlist/${id}?type=album`
+    : `${API_BASE}/music/playlist/${id}`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Failed to fetch playlist: ${res.status}`)
+
+  const data = await res.json()
+  return {
+    playlist: data.playlist,
+    tracks: data.playlist.tracks.map((t) => ({
+      id: String(t.id),
+      title: t.name,
+      artists: t.artists.map((a) => a.name).join(', '),
+      album: t.album,
+      duration: t.duration,
+      src: '',
+    })),
+  }
+}
+
 export async function scrobbleSong(trackId, sourceId, time) {
   try {
     const res = await fetch(`${API_BASE}/music/scrobble`, {

@@ -1,5 +1,5 @@
 import { LOCAL_AMBIENT_TRACKS } from './tracks.js'
-import { fetchDefaultPlaylist, fetchSongUrl } from './neteaseSource.js'
+import { fetchDefaultPlaylist, fetchPlaylistById, fetchSongUrl } from './neteaseSource.js'
 
 export const MUSIC_SOURCE_TYPES = Object.freeze({
   local: 'local',
@@ -25,14 +25,15 @@ const NETEASE_TRACK_SOURCE = Object.freeze({
   getPlaylistName() {
     return neteasePlaylistName
   },
-  async loadPlaylist() {
-    if (neteaseLoaded) return { tracks: neteaseTracks, name: neteasePlaylistName }
+  async loadPlaylist(id, type) {
     try {
-      const { playlist, tracks } = await fetchDefaultPlaylist()
+      const { playlist, tracks } = id
+        ? await fetchPlaylistById(id, type)
+        : await fetchDefaultPlaylist()
       neteaseTracks = tracks
       neteasePlaylistName = playlist.name
       neteaseLoaded = true
-      return { tracks, name: playlist.name }
+      return { tracks, name: playlist.name, id: String(playlist.id) }
     } catch {
       return { tracks: LOCAL_AMBIENT_TRACKS, name: '' }
     }

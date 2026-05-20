@@ -51,6 +51,9 @@ export function useAmbientMusicController() {
   const [currentPlaylistId, setCurrentPlaylistId] = useState(() => {
     try { return localStorage.getItem('selectedPlaylistId') || '' } catch { return '' }
   })
+  const [currentPlaylistType, setCurrentPlaylistType] = useState(() => {
+    try { return localStorage.getItem('selectedPlaylistType') || 'playlist' } catch { return 'playlist' }
+  })
   // Scrobble tracking
   const scrobbledRef = useRef(new Set())
   const playStartRef = useRef(null)
@@ -72,8 +75,8 @@ export function useAmbientMusicController() {
     }).catch(() => {})
 
     const savedPlaylistId = currentPlaylistId
-    const loadId = savedPlaylistId || undefined
-    trackSource.loadPlaylist(loadId).then(({ tracks: newTracks, name, id }) => {
+    const savedPlaylistType = currentPlaylistType
+    trackSource.loadPlaylist(savedPlaylistId || undefined, savedPlaylistType).then(({ tracks: newTracks, name, id }) => {
       setTracks(newTracks)
       setPlaylistName(name)
       if (id) setCurrentPlaylistId(id)
@@ -334,7 +337,11 @@ export function useAmbientMusicController() {
         setTracks(newTracks)
         setPlaylistName(data.playlist.name)
         setCurrentPlaylistId(playlistId)
-        try { localStorage.setItem('selectedPlaylistId', playlistId) } catch {}
+        setCurrentPlaylistType(type)
+        try {
+          localStorage.setItem('selectedPlaylistId', playlistId)
+          localStorage.setItem('selectedPlaylistType', type)
+        } catch {}
         if (newTracks.length > 0) {
           selectTrack(newTracks[0].id)
         }
