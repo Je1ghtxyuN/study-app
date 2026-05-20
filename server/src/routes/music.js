@@ -1,7 +1,9 @@
 import { Hono } from 'hono'
 import {
   getPlaylistDetail,
+  getAlbumDetail,
   getSongUrl,
+  scrobbleSong,
   login,
   loginPhone,
   sendCaptcha,
@@ -17,13 +19,16 @@ music.get('/presets', (c) => {
   return c.json({ presets: PRESET_PLAYLISTS })
 })
 
-// Public: get playlist by ID (default playlist if no ID)
+// Public: get playlist or album by ID (default playlist if no ID)
 music.get('/playlist/:id?', async (c) => {
   const id = c.req.param('id') || DEFAULT_PLAYLIST_ID
+  const type = c.req.query('type') || 'playlist'
 
   try {
-    const playlist = await getPlaylistDetail(id)
-    return c.json({ playlist })
+    const data = type === 'album'
+      ? await getAlbumDetail(id)
+      : await getPlaylistDetail(id)
+    return c.json({ playlist: data })
   } catch (err) {
     return c.json({ error: err.message }, 500)
   }
@@ -108,6 +113,21 @@ music.post('/captcha/verify', async (c) => {
 music.get('/user/playlists', async (c) => {
   try {
     const result = await getUserPlaylists()
+    return c.json(result)
+  } catch (err) {
+    return c.json({ error: err.message }, 500)
+  }
+})
+
+// Scrobble play history to NetEase (requires login cookie)
+music.post('/scrobble', async (c) => {
+  let body
+  try { body = await c.req.json() } catch { return c.json({ error: 'Invalid JSON body' }, 400) }
+  const { id, sourceId, time } = body
+  if (!id) return c.json({ error: 'Song ID is required' }, 400)
+
+  try {
+    const result = await scrobbleSong(id, sourceId, time)
     return c.json(result)
   } catch (err) {
     return c.json({ error: err.message }, 500)
