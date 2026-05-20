@@ -99,15 +99,18 @@ export async function saveBackground(file) {
 
 export async function listBackgrounds() {
   const db = await openDB()
-  const tx = db.transaction(STORE_NAME, 'readonly')
-  const store = tx.objectStore(STORE_NAME)
-  const request = store.getAll()
-  const results = await new Promise((resolve, reject) => {
-    request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error)
-  })
-  db.close()
-  return results.map(({ blob, ...meta }) => meta)
+  try {
+    const tx = db.transaction(STORE_NAME, 'readonly')
+    const store = tx.objectStore(STORE_NAME)
+    const request = store.getAll()
+    const results = await new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    return results.map(({ blob, ...meta }) => meta)
+  } finally {
+    db.close()
+  }
 }
 
 export async function getBackgroundBlob(id) {
