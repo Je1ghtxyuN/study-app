@@ -33,7 +33,7 @@ studySessions.post('/', async (c) => {
   return c.json({ session }, 201)
 })
 
-// GET /study-sessions/stats — per-user stats (or global if not logged in)
+// GET /study-sessions/stats — per-user stats derived from total minutes studied
 studySessions.get('/stats', async (c) => {
   const now = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -44,12 +44,20 @@ studySessions.get('/stats', async (c) => {
   if (!userId) return c.json({ total: 0, today: 0, thisWeek: 0, totalMinutes: 0 })
   const userFilter = { userId }
 
-  const [total, today, thisWeek, totalMinutes] = await Promise.all([
-    prisma.studySession.count({ where: userFilter }),
-    prisma.studySession.count({ where: { ...userFilter, completedAt: { gte: todayStart } } }),
-    prisma.studySession.count({ where: { ...userFilter, completedAt: { gte: weekStart } } }),
+  // Get user's current work duration setting (stored as seconds in preferences)
+  const user = await prisma.studyUser.findUnique({ where: { id: userId }, select: { preferences: true } })
+  const workDurationMin = Math.round((user?.preferences?.durations?.work || 1500) / 60) || 25
+
+  const [totalMin, todayMin, thisWeekMin, totalMinutes] = await Promise.all([
+    prisma.studySession.aggregate({ where: userFilter, _sum: { workDuration: true } }),
+    prisma.studySession.aggregate({ where: { ...userFilter, completedAt: { gte: todayStart } }, _sum: { workDuration: true } }),
+    prisma.studySession.aggregate({ where: { ...userFilter, completedAt: { gte: weekStart } }, _sum: { workDuration: true } }),
     prisma.studySession.aggregate({ where: userFilter, _sum: { workDuration: true } }),
   ])
+
+  const total = Math.floor((totalMin._sum.workDuration || 0) / workDurationMin)
+  const today = Math.floor((todayMin._sum.workDuration || 0) / workDurationMin)
+  const thisWeek = Math.floor((thisWeekMin._sum.workDuration || 0) / workDurationMin)
 
   return c.json({ total, today, thisWeek, totalMinutes: totalMinutes._sum.workDuration || 0 })
 })
