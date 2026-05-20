@@ -46,6 +46,12 @@ npm run prisma:studio      # prisma studio GUI
 bash scripts/deploy.sh     # Build + sync + Docker rebuild on server
 ```
 
+**Before deploying:** Always review `scripts/deploy.sh` to ensure it matches the current project structure. Check that:
+- No stale paths or outdated rsync targets
+- Docker Compose config reflects current services
+- Prisma migrations are included if schema changed
+- No destructive operations (e.g., volume wipes) are accidentally present
+
 ## API Routes
 
 | Route | Method | Description |
@@ -57,7 +63,8 @@ bash scripts/deploy.sh     # Build + sync + Docker rebuild on server
 | `/user/me` | GET | Current user |
 | `/user/prefs` | GET/PUT | User preferences |
 | `/user/github` | GET | GitHub OAuth URL |
-| `/user/github/callback` | POST | GitHub OAuth callback |
+| `/user/github/callback` | POST | GitHub OAuth code exchange |
+| `/user/github/callback` | GET | GitHub OAuth redirect → SPA |
 | `/study-sessions` | POST | Record Pomodoro |
 | `/study-sessions/stats` | GET | Statistics |
 | `/study-sessions/daily` | GET | Daily stats for calendar |
