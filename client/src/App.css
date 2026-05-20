@@ -1326,6 +1326,16 @@ code {
   }
 }
 
+/* Custom playlist input */
+.custom-playlist-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.custom-playlist-input .input {
+  flex: 1;
+}
+
 /* Music player icon buttons */
 .music-widget__icon-btn {
   min-width: 2.8rem;
