@@ -9,6 +9,7 @@ export function StudyChromeWidget({
   mode = 'idle',
   activePanel,
   onOpenPanel,
+  onPanelHover,
 }) {
   const { t } = useStudyRoomLocale()
 
@@ -32,6 +33,7 @@ export function StudyChromeWidget({
             type="button"
             className={`scene-chrome__button${activePanel === item.id ? ' scene-chrome__button--active' : ''}`}
             onClick={() => onOpenPanel(item.id)}
+            onMouseEnter={() => onPanelHover?.(item.id)}
             aria-label={getPanelTitle(item.id)}
             title={getPanelTitle(item.id)}
           >
@@ -54,6 +56,7 @@ export function StudyChromeWidget({
             type="button"
             className={`scene-chrome__button${activePanel === item.id ? ' scene-chrome__button--active' : ''}`}
             onClick={() => onOpenPanel(item.id)}
+            onMouseEnter={() => onPanelHover?.(item.id)}
             aria-label={getPanelTitle(item.id)}
             title={getPanelTitle(item.id)}
           >

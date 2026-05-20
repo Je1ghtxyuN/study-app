@@ -7,6 +7,7 @@ import { TimerPanel } from '../../features/timer/index.js'
 import { TodoPanel } from '../../features/todo/index.js'
 import { useStudyRoomLocale } from '../../i18n/useStudyRoomLocale.js'
 import { getStudyScene } from '../../lib/studyScene.js'
+import { usePanelPrefetch } from '../../lib/usePanelPrefetch.js'
 import { StudyLayout } from '../../layouts/StudyLayout.jsx'
 import {
   useStudyRoomActions,
@@ -18,6 +19,7 @@ export function StudyPage() {
   const { closePanel, enterFocusMode, enterIdleMode, openPanel } =
     useStudyRoomActions()
   const { t } = useStudyRoomLocale()
+  const { onPanelHover } = usePanelPrefetch()
   const displayMode = ui.mode === 'panel' ? ui.previousMode : ui.mode
   const activeScene = getStudyScene(preferences.selectedSceneId)
   const panelDefinitions = {
@@ -60,6 +62,7 @@ export function StudyPage() {
             mode={displayMode}
             activePanel={ui.activePanel}
             onOpenPanel={handleOpenPanel}
+            onPanelHover={onPanelHover}
           />
         }
         center={
