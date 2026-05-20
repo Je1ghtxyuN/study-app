@@ -1,8 +1,7 @@
 import { createRequire } from 'node:module'
+import { DEFAULT_PLAYLIST_ID } from '../config/playlists.js'
 
 const require = createRequire(import.meta.url)
-
-const DEFAULT_PLAYLIST_ID = '17688647005'
 
 let neteaseApi = null
 let userCookies = null
@@ -219,10 +218,6 @@ export async function getUserPlaylists() {
     console.error('[music] getUserPlaylists error:', err.message)
     return { playlists: [] }
   }
-}
-
-export function getDefaultPlaylistId() {
-  return DEFAULT_PLAYLIST_ID
 }
 
 function formatTrack(track) {

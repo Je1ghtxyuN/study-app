@@ -7,14 +7,14 @@ import {
   sendCaptcha,
   verifyCaptcha,
   getUserPlaylists,
-  getDefaultPlaylistId,
 } from '../services/music.js'
+import { DEFAULT_PLAYLIST_ID } from '../config/playlists.js'
 
 const music = new Hono()
 
 // Public: get playlist by ID (default playlist if no ID)
 music.get('/playlist/:id?', async (c) => {
-  const id = c.req.param('id') || getDefaultPlaylistId()
+  const id = c.req.param('id') || DEFAULT_PLAYLIST_ID
 
   try {
     const playlist = await getPlaylistDetail(id)
