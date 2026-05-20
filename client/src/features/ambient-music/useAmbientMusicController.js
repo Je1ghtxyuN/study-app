@@ -91,10 +91,26 @@ export function useAmbientMusicController() {
     wasPlayingRef.current = playbackState === 'playing'
   }, [playbackState])
 
+  // Scrobble previous track on track change (must run before play time tracking)
+  useEffect(() => {
+    if (!lastSetTrackId || lastSetTrackId === currentTrack.id) return
+    if (playStartRef.current) {
+      accumulatedRef.current += (Date.now() - playStartRef.current) / 1000
+      playStartRef.current = null
+    }
+    if (accumulatedRef.current >= 30 && neteaseUser && !scrobbledRef.current.has(lastSetTrackId)) {
+      scrobbledRef.current.add(lastSetTrackId)
+      scrobbleSong(lastSetTrackId, currentPlaylistIdRef.current, accumulatedRef.current)
+    }
+    accumulatedRef.current = 0
+  }, [currentTrack.id, neteaseUser])
+
   // Track play time for scrobble
   useEffect(() => {
     if (playbackState === 'playing') {
-      playStartRef.current = Date.now()
+      if (!playStartRef.current) {
+        playStartRef.current = Date.now()
+      }
     } else {
       if (playStartRef.current) {
         accumulatedRef.current += (Date.now() - playStartRef.current) / 1000
@@ -136,18 +152,6 @@ export function useAmbientMusicController() {
 
   // Switch track — skip if audio already has this track loaded
   useEffect(() => {
-    // Scrobble previous track if threshold met
-    if (lastSetTrackId && lastSetTrackId !== currentTrack.id) {
-      if (playStartRef.current) {
-        accumulatedRef.current += (Date.now() - playStartRef.current) / 1000
-        playStartRef.current = null
-      }
-      if (accumulatedRef.current >= 30 && neteaseUser && !scrobbledRef.current.has(lastSetTrackId)) {
-        scrobbledRef.current.add(lastSetTrackId)
-        scrobbleSong(lastSetTrackId, currentPlaylistIdRef.current, accumulatedRef.current)
-      }
-      accumulatedRef.current = 0
-    }
     if (!currentTrack.src) return
     if (lastSetTrackId === currentTrack.id) {
       const ended = audio.paused && audio.currentTime >= (audio.duration || Infinity) - 0.5
