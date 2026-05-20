@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStudyRoomLocale } from '../../i18n/useStudyRoomLocale.js'
 import { useAmbientMusicController } from './useAmbientMusicController.js'
+import { Skeleton } from '../../components/Skeleton.jsx'
 
 export function AmbientMusicPanel() {
   const { t } = useStudyRoomLocale()
@@ -219,18 +220,22 @@ export function AmbientMusicPanel() {
         <label htmlFor="track-select">
           {t('common.track', {}, 'Track')}
         </label>
-        <select
-          id="track-select"
-          className="select"
-          value={currentTrack.id}
-          onChange={(event) => selectTrack(event.target.value)}
-        >
-          {tracks.map((track) => (
-            <option key={track.id} value={track.id}>
-              {track.title}
-            </option>
-          ))}
-        </select>
+        {loading ? (
+          <Skeleton height="2.25rem" />
+        ) : (
+          <select
+            id="track-select"
+            className="select"
+            value={currentTrack.id}
+            onChange={(event) => selectTrack(event.target.value)}
+          >
+            {tracks.map((track) => (
+              <option key={track.id} value={track.id}>
+                {track.title}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="music-widget__controls">

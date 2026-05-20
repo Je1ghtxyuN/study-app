@@ -6,6 +6,7 @@ import {
 } from '../../state/useStudyRoom.js'
 import { getAmbientTrackSource, MUSIC_SOURCE_TYPES } from './musicSources.js'
 import { loginNetEase, loginNetEasePhone, sendSmsCode, verifySmsCode, fetchUserPlaylists, fetchPresetPlaylists, scrobbleSong } from './neteaseSource.js'
+import { getCachedData } from '../../lib/panelPrefetchCache.js'
 
 const PLAY_MODES = ['loop', 'sequential', 'shuffle']
 const PLAY_MODE_ICONS = { loop: '↻', sequential: '→', shuffle: '⇄' }
@@ -69,6 +70,19 @@ export function useAmbientMusicController() {
 
   // Load presets and initial playlist on mount
   useEffect(() => {
+    const cached = getCachedData('music')
+    if (cached) {
+      setPresets(cached.presets)
+      setTracks(cached.tracks)
+      setPlaylistName(cached.playlistName)
+      if (cached.playlistId) setCurrentPlaylistId(cached.playlistId)
+      setLoading(false)
+      if (cached.tracks.length > 0 && !preferences.selectedTrackId) {
+        setPreference('selectedTrackId', cached.tracks[0].id)
+      }
+      return
+    }
+
     setLoading(true)
     fetchPresetPlaylists().then(({ presets: p }) => {
       setPresets(p || [])
