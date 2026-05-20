@@ -13,6 +13,7 @@ export function createPersistedStudyRoomPayload(state) {
       selectedTrackId: state.preferences.selectedTrackId,
       timerDisplayMode: state.preferences.timerDisplayMode,
       volume: state.preferences.volume,
+      playMode: state.preferences.playMode,
     },
     timerConfig: {
       workMinutes: secondsToMinutes(state.timer.durations.work),

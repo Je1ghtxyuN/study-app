@@ -31,6 +31,7 @@ const DEFAULT_PREFERENCES = Object.freeze({
   selectedSceneId: DEFAULT_SCENE_ID,
   timerDisplayMode: TIMER_DISPLAY_MODES.centerFocus,
   volume: 0.45,
+  playMode: 'loop',
 })
 
 const DEFAULT_UI_STATE = Object.freeze({
@@ -117,6 +118,11 @@ const normalizePreferences = (preferences = {}) => ({
       ? preferences.timerDisplayMode
       : DEFAULT_PREFERENCES.timerDisplayMode,
   volume: clampVolume(preferences.volume),
+  playMode:
+    typeof preferences.playMode === 'string' &&
+    ['loop', 'sequential', 'shuffle'].includes(preferences.playMode)
+      ? preferences.playMode
+      : DEFAULT_PREFERENCES.playMode,
 })
 
 const normalizeManualSessionType = (sessionType) =>

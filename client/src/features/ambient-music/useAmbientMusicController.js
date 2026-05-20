@@ -47,7 +47,6 @@ export function useAmbientMusicController() {
   const [neteaseUser, setNeteaseUser] = useState(null)
   const [userPlaylists, setUserPlaylists] = useState([])
   const [loginError, setLoginError] = useState('')
-  const [playMode, setPlayMode] = useState('loop')
   const sourceType = MUSIC_SOURCE_TYPES.netease
   const trackSource = getAmbientTrackSource(sourceType)
   const audio = getGlobalAudio()
@@ -162,28 +161,45 @@ export function useAmbientMusicController() {
     selectTrack(tracks[nextIndex]?.id)
   }, [selectedTrackIndex, tracks, selectTrack])
 
-  // Store nextTrack function in ref so ended listener always has latest
+  // Store nextTrack function in ref so ended listener always has latest.
+  // Handles audio switching directly so auto-advance works even when panel is unmounted.
   nextTrackRef.current = () => {
-    if (playMode === 'shuffle' && tracks.length > 1) {
-      let randomIndex
+    const mode = preferences.playMode
+    let nextIndex
+    if (mode === 'shuffle' && tracks.length > 1) {
       do {
-        randomIndex = Math.floor(Math.random() * tracks.length)
-      } while (randomIndex === selectedTrackIndex)
-      selectTrack(tracks[randomIndex]?.id)
-    } else if (playMode === 'sequential' && selectedTrackIndex >= tracks.length - 1) {
-      // Stop at end of playlist in sequential mode
+        nextIndex = Math.floor(Math.random() * tracks.length)
+      } while (nextIndex === selectedTrackIndex)
+    } else if (mode === 'sequential' && selectedTrackIndex >= tracks.length - 1) {
       pause()
+      return
     } else {
-      goToTrack(1)
+      nextIndex = (selectedTrackIndex + 1) % tracks.length
+    }
+    const nextTrack = tracks[nextIndex]
+    if (!nextTrack) return
+    selectTrack(nextTrack.id)
+
+    // Directly switch audio element — works even when panel/component is unmounted
+    const switchAudio = (url) => {
+      audio.pause()
+      audio.src = url
+      audio.load()
+      lastSetTrackId = nextTrack.id
+      void audio.play().catch(() => {})
+    }
+    if (nextTrack.src) {
+      switchAudio(nextTrack.src)
+    } else {
+      trackSource.getTrackUrl(nextTrack.id).then((url) => {
+        if (url) switchAudio(url)
+      })
     }
   }
 
   // Auto-advance to next track when current ends (module-level so it survives panel unmount)
   useEffect(() => {
     onTrackEnded = () => { nextTrackRef.current?.() }
-    return () => {
-      onTrackEnded = null
-    }
   }, [])
 
   const doNetEaseLogin = useCallback(async (account, password) => {
@@ -243,11 +259,9 @@ export function useAmbientMusicController() {
   }, [])
 
   const cyclePlayMode = useCallback(() => {
-    setPlayMode((prev) => {
-      const nextIndex = (PLAY_MODES.indexOf(prev) + 1) % PLAY_MODES.length
-      return PLAY_MODES[nextIndex]
-    })
-  }, [])
+    const nextIndex = (PLAY_MODES.indexOf(preferences.playMode) + 1) % PLAY_MODES.length
+    setPreference('playMode', PLAY_MODES[nextIndex])
+  }, [preferences.playMode, setPreference])
 
   const switchToPlaylist = useCallback(async (playlistId) => {
     setLoading(true)
@@ -310,8 +324,8 @@ export function useAmbientMusicController() {
     nextTrack() { goToTrack(1) },
     previousTrack() { goToTrack(-1) },
     setVolume(value) { setPreference('volume', value) },
-    playMode,
-    playModeIcon: PLAY_MODE_ICONS[playMode],
+    playMode: preferences.playMode,
+    playModeIcon: PLAY_MODE_ICONS[preferences.playMode],
     cyclePlayMode,
     // NetEase login
     neteaseUser,
