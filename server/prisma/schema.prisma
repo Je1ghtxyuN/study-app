@@ -25,6 +25,8 @@ model StudyUser {
   isGuest      Boolean  @default(false)
   lastActiveAt DateTime @default(now())
   createdAt    DateTime @default(now())
+
+  backgrounds  UserBackground[]
 }
 
 model StudySession {
@@ -44,5 +46,20 @@ model TodoItem {
   done      Boolean  @default(false)
   createdAt DateTime @default(now())
 
+  @@index([userId])
+}
+
+model UserBackground {
+  id            String   @id @default(cuid())
+  userId        String
+  fileName      String
+  fileType      String
+  mimeType      String
+  fileSize      Int
+  filePath      String
+  thumbnailPath String?
+  createdAt     DateTime @default(now())
+
+  user StudyUser @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId])
 }
