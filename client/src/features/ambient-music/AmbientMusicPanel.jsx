@@ -32,6 +32,7 @@ export function AmbientMusicPanel() {
     presets,
     currentPlaylistId,
     loadCustomPlaylist,
+    playlistName,
   } = useAmbientMusicController()
   const currentTrackTitle = currentTrack.title || t('studyRoom.music.noTrack', {}, 'No track')
   const artists = currentTrack.artists || ''
@@ -60,6 +61,12 @@ export function AmbientMusicPanel() {
   const handleSmsLogin = (e) => {
     e.preventDefault()
     doSmsLogin(smsPhone, smsCode)
+  }
+
+  const handleLoadCustom = () => {
+    if (!customPlaylistInput) return
+    loadCustomPlaylist(customPlaylistInput)
+    setCustomPlaylistInput('')
   }
 
   return (
@@ -150,12 +157,19 @@ export function AmbientMusicPanel() {
 
       {/* Playlist selector */}
       <div className="field">
-        <label>{t('studyRoom.music.playlist', {}, 'Playlist')}</label>
+        <label htmlFor="playlist-select">{t('studyRoom.music.playlist', {}, 'Playlist')}</label>
         <select
+          id="playlist-select"
           className="select"
           value={currentPlaylistId}
           onChange={(e) => { if (e.target.value) switchToPlaylist(e.target.value) }}
         >
+          {presets.length === 0 && !neteaseUser && (
+            <option value="" disabled>{t('studyRoom.music.noPlaylistAvailable', {}, 'No playlists available')}</option>
+          )}
+          {currentPlaylistId && ![...presets, ...userPlaylists].some((pl) => pl.id === currentPlaylistId) && (
+            <option value={currentPlaylistId}>{playlistName || currentPlaylistId}</option>
+          )}
           {presets.length > 0 && (
             <optgroup label={t('studyRoom.music.presetPlaylists', {}, 'Presets')}>
               {presets.map((pl) => (
@@ -175,20 +189,21 @@ export function AmbientMusicPanel() {
 
       {/* Custom playlist input */}
       <div className="field">
-        <label>{t('studyRoom.music.customPlaylist', {}, 'Custom Playlist')}</label>
-        <div className="custom-playlist-input">
+        <label htmlFor="custom-playlist-input">{t('studyRoom.music.customPlaylist', {}, 'Custom Playlist')}</label>
+        <div className="music-widget__custom-playlist">
           <input
+            id="custom-playlist-input"
             className="input"
             type="text"
             placeholder={t('studyRoom.music.customPlaylistPlaceholder', {}, 'Paste playlist ID or URL')}
             value={customPlaylistInput}
             onChange={(e) => setCustomPlaylistInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && customPlaylistInput) { loadCustomPlaylist(customPlaylistInput); setCustomPlaylistInput('') } }}
+            onKeyDown={handleLoadCustom}
           />
           <button
             type="button"
             className="button button--ghost button--sm"
-            onClick={() => { if (customPlaylistInput) { loadCustomPlaylist(customPlaylistInput); setCustomPlaylistInput('') } }}
+            onClick={handleLoadCustom}
             disabled={!customPlaylistInput}
           >
             {t('common.load', {}, 'Load')}

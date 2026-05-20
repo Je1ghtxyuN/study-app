@@ -1327,12 +1327,12 @@ code {
 }
 
 /* Custom playlist input */
-.custom-playlist-input {
+.music-widget__custom-playlist {
   display: flex;
   gap: 0.5rem;
 }
 
-.custom-playlist-input .input {
+.music-widget__custom-playlist .input {
   flex: 1;
 }
 

@@ -329,6 +329,7 @@ export function useAmbientMusicController() {
     musicSourceLabel: sourceType === MUSIC_SOURCE_TYPES.netease
       ? playlistName || t('studyRoom.music.source.neteaseLabel', {}, 'NetEase Cloud')
       : t('studyRoom.music.source.localLabel', {}, 'Local Library'),
+    playlistName,
     tracks,
     currentTrack,
     playbackState,
