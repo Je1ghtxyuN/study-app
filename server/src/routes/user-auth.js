@@ -186,11 +186,11 @@ userAuth.post('/github/callback', async (c) => {
   return handleGitHubOAuth(c, code)
 })
 
-// GET /user/github/callback — direct browser redirect from GitHub (legacy)
+// GET /user/github/callback — browser redirect from GitHub, forward code to SPA
 userAuth.get('/github/callback', async (c) => {
   const code = c.req.query('code')
-  if (!code) return c.json({ error: 'No code provided' }, 400)
-  return handleGitHubOAuth(c, code)
+  if (!code) return c.redirect('/')
+  return c.redirect(`/?code=${encodeURIComponent(code)}`)
 })
 
 async function handleGitHubOAuth(c, code) {
