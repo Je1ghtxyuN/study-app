@@ -13,6 +13,7 @@ import {
   deleteBackground,
   getBackgroundBlob,
 } from '../../lib/backgroundStorage.js'
+import { syncBackgrounds, uploadToServer, deleteFromServer } from '../../lib/backgroundSync.js'
 
 const DISPLAY_OPTIONS = [
   { id: TIMER_DISPLAY_MODES.centerFocus, labelKey: 'studyRoom.settings.displayModes.center_focus.label', fallback: 'Center Focus' },
@@ -48,11 +49,16 @@ export function SettingsPanelContent() {
 
   useEffect(() => { refreshList() }, [refreshList])
 
+  useEffect(() => {
+    syncBackgrounds().then(refreshList)
+  }, [])
+
   const handleUpload = useCallback(async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
     try {
       const record = await saveBackground(file)
+      uploadToServer(record.id, file.name, file.type).catch(() => {})
       await refreshList()
       setPreference('selectedSceneId', `custom:${record.id}`)
     } catch (err) {
@@ -62,6 +68,9 @@ export function SettingsPanelContent() {
   }, [refreshList, setPreference])
 
   const handleDelete = useCallback(async (id) => {
+    const items = await listBackgrounds()
+    const item = items.find((b) => b.id === id)
+    if (item?.serverId) deleteFromServer(item.serverId).catch(() => {})
     await deleteBackground(id)
     if (preferences.selectedSceneId === `custom:${id}`) {
       setPreference('selectedSceneId', STUDY_SCENES[0].id)
