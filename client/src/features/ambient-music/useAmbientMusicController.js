@@ -5,7 +5,7 @@ import {
   useStudyRoomState,
 } from '../../state/useStudyRoom.js'
 import { getAmbientTrackSource, MUSIC_SOURCE_TYPES } from './musicSources.js'
-import { loginNetEase, loginNetEasePhone, sendSmsCode, verifySmsCode, fetchUserPlaylists, fetchPresetPlaylists } from './neteaseSource.js'
+import { loginNetEase, loginNetEasePhone, sendSmsCode, verifySmsCode, fetchUserPlaylists, fetchPresetPlaylists, scrobbleSong } from './neteaseSource.js'
 
 const PLAY_MODES = ['loop', 'sequential', 'shuffle']
 const PLAY_MODE_ICONS = { loop: '↻', sequential: '→', shuffle: '⇄' }
@@ -274,10 +274,14 @@ export function useAmbientMusicController() {
     setPreference('playMode', PLAY_MODES[nextIndex])
   }, [preferences.playMode, setPreference])
 
-  const switchToPlaylist = useCallback(async (playlistId) => {
+  const switchToPlaylist = useCallback(async (playlistId, type = 'playlist') => {
     setLoading(true)
     try {
-      const res = await fetch(`${import.meta.env.DEV ? 'http://localhost:3001' : ''}/music/playlist/${playlistId}`)
+      const base = import.meta.env.DEV ? 'http://localhost:3001' : ''
+      const url = type === 'album'
+        ? `${base}/music/playlist/${playlistId}?type=album`
+        : `${base}/music/playlist/${playlistId}`
+      const res = await fetch(url)
       const data = await res.json()
       if (data.playlist) {
         const newTracks = data.playlist.tracks.map((t) => ({

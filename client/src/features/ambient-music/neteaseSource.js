@@ -87,3 +87,17 @@ export async function fetchPresetPlaylists() {
   if (!res.ok) return { presets: [] }
   return res.json()
 }
+
+export async function scrobbleSong(trackId, sourceId, time) {
+  try {
+    const res = await fetch(`${API_BASE}/music/scrobble`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: trackId, sourceId, time }),
+    })
+    if (!res.ok) return { ok: false }
+    return res.json()
+  } catch {
+    return { ok: false }
+  }
+}
