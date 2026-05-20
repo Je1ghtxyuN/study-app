@@ -86,7 +86,7 @@ export function StudyStatisticsPanel() {
           <p className="floating-widget__eyebrow">{t('studyRoom.statistics.eyebrow', {}, 'Statistics')}</p>
           <h2 className="floating-widget__title">{t('studyRoom.statistics.title', {}, 'Study Stats')}</h2>
         </div>
-        <span className="floating-widget__badge">{user ? user.nickname || user.email : t('common.guest', {}, 'Guest')}</span>
+        {user && <span className="floating-widget__badge">{user.nickname || user.email}</span>}
       </div>
 
       {/* Login / User section */}
