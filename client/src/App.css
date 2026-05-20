@@ -820,6 +820,48 @@
   border-color: rgba(142, 183, 255, 0.58);
 }
 
+.scene-selector__option--custom {
+  position: relative;
+  overflow: hidden;
+}
+
+.scene-selector__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scene-selector__delete {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 18px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.scene-selector__option--custom:hover .scene-selector__delete {
+  opacity: 1;
+}
+
+.scene-selector__option--add {
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+.scene-selector__option--add:hover {
+  opacity: 1;
+}
+
 .scene-selector__label {
   font-size: 0.95rem;
   font-weight: 600;
