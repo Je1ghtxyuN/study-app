@@ -48,18 +48,18 @@ studySessions.get('/stats', async (c) => {
   const user = await prisma.studyUser.findUnique({ where: { id: userId }, select: { preferences: true } })
   const workDurationMin = Math.round((user?.preferences?.durations?.work || 1500) / 60) || 25
 
-  const [totalMin, todayMin, thisWeekMin, totalMinutes] = await Promise.all([
+  const [totalMin, todayMin, thisWeekMin] = await Promise.all([
     prisma.studySession.aggregate({ where: userFilter, _sum: { workDuration: true } }),
     prisma.studySession.aggregate({ where: { ...userFilter, completedAt: { gte: todayStart } }, _sum: { workDuration: true } }),
     prisma.studySession.aggregate({ where: { ...userFilter, completedAt: { gte: weekStart } }, _sum: { workDuration: true } }),
-    prisma.studySession.aggregate({ where: userFilter, _sum: { workDuration: true } }),
   ])
 
-  const total = Math.floor((totalMin._sum.workDuration || 0) / workDurationMin)
+  const totalMinutes = totalMin._sum.workDuration || 0
+  const total = Math.floor(totalMinutes / workDurationMin)
   const today = Math.floor((todayMin._sum.workDuration || 0) / workDurationMin)
   const thisWeek = Math.floor((thisWeekMin._sum.workDuration || 0) / workDurationMin)
 
-  return c.json({ total, today, thisWeek, totalMinutes: totalMinutes._sum.workDuration || 0 })
+  return c.json({ total, today, thisWeek, totalMinutes })
 })
 
 // GET /study-sessions/daily — daily study minutes for contribution calendar
