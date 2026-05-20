@@ -81,3 +81,9 @@ export async function fetchUserPlaylists() {
   if (!res.ok) return { playlists: [] }
   return res.json()
 }
+
+export async function fetchPresetPlaylists() {
+  const res = await fetch(`${API_BASE}/music/presets`)
+  if (!res.ok) return { presets: [] }
+  return res.json()
+}
